@@ -14,7 +14,9 @@ __all__ = [
     "ObservedProperty",
     "SensorProperty",
     "Sensor",
+    "Thing",
     "Unit",
+    "Link",
     "Datastream",
     "Observation",
 ]
