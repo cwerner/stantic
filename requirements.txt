@@ -1,0 +1,9 @@
+#numpy
+#pandas
+#xarray
+python-dotenv
+requests
+pydantic[email]
+pandas
+#sqlmodel
+
