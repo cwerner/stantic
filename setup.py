@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from os import path
+import glob
+import os
 
 from setuptools import find_packages, setup
 
@@ -26,14 +27,14 @@ CLASSIFIERS = [
 
 PYTHON_REQUIRES = ">=3.7"
 
-here = path.abspath(path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, "README.md"), encoding="utf-8") as f:
+with open(os.path.join(here, "README.md"), encoding="utf-8") as f:
     LONG_DESCRIPTION = f.read()
 
 # get the dependencies and installs
-with open(path.join(here, "requirements.txt"), encoding="utf-8") as f:
+with open(os.path.join(here, "requirements.txt"), encoding="utf-8") as f:
     all_reqs = f.read().split("\n")
 
 INSTALL_REQUIRES = [x.strip() for x in all_reqs if "git+" not in x]
@@ -49,8 +50,13 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     url=URL,
-    packages=find_packages(exclude=["docs", "tests"]),
+    packages=find_packages("src", exclude=["docs", "tests"]),
     install_requires=INSTALL_REQUIRES,
+    package_dir={"": "src"},
+    py_modules=[
+        os.path.splitext(os.path.basename(p))[0] for p in glob.glob("src/*.py")
+    ],
+    include_package_data=True,
     # package_dir={"ldndctools": "ldndctools"},
     # package_data={"ldndctools": ["data/catalog.yml"]},
     # include_package_data=True,
