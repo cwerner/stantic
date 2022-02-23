@@ -4,7 +4,7 @@ from os import path
 
 from setuptools import find_packages, setup
 
-DISTNAME = "stanic"
+DISTNAME = "stantic"
 LICENSE = "MIT"
 AUTHOR = "Christian Werner"
 AUTHOR_EMAIL = "christian.werner@kit.edu"
