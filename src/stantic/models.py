@@ -3,6 +3,22 @@ from typing import Any, List, Literal, Optional, Tuple
 
 from pydantic import BaseModel, EmailStr, Field
 
+__all__ = [
+    "Property",
+    "Person",
+    "Entity",
+    "ThingProperty",
+    "LocationProperty",
+    "LocationGeo",
+    "Location",
+    "ObservedProperty",
+    "SensorProperty",
+    "Sensor",
+    "Unit",
+    "Datastream",
+    "Observation",
+]
+
 
 class Property(BaseModel):
     pass

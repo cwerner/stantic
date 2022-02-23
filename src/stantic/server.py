@@ -8,6 +8,8 @@ import requests
 
 from .models import Datastream, Entity, Location, ObservedProperty, Sensor, Thing
 
+__all__ = ["Server"]
+
 # type definitions
 Url = str
 
