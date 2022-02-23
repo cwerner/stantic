@@ -189,7 +189,7 @@ class Server:
         headers = {"content-type": "application/json"}
         res = requests.patch(url, data=json.dumps(entity.dict()), headers=headers)
         if res.status_code != 200:
-            print(f"Update not sucessful. Return status {res.status_code}")
+            print(f"Update not successful. Return status {res.status_code}")
 
     def update_field(
         self, E: Type[Entity], id: int, payload: Dict[str, Any]
@@ -207,7 +207,7 @@ class Server:
         headers = {"content-type": "application/json"}
         res = requests.patch(url, data=json.dumps(payload), headers=headers)
         if res.status_code != 200:
-            print(f"Update not sucessful. Return status {res.status_code}")
+            print(f"Update not successful. Return status {res.status_code}")
 
         # get patched entity and return it
         return self.get(E, id=id)
@@ -251,7 +251,7 @@ class Server:
         res = requests.delete(url)
 
         if res.status_code != 200:
-            print(f"Delete not sucessful. Return status {res.status_code}")
+            print(f"Delete not successful. Return status {res.status_code}")
         else:
             # check that all entities are gone
             result = self.get(E, id=id)
