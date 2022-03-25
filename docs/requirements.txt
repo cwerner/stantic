@@ -1,0 +1,5 @@
+sphinx>=4.0
+pygments>=2.7
+myst-parser>=0.17.0
+furo>=2022.3.4
+sphinxcontrib-mermaid>=0.7.1
