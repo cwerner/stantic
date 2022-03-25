@@ -21,7 +21,6 @@ jobs:
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-        pre-build-command: python -m pip install -U sphinx>=4.0
 
     - name: Create artifact
       uses: actions/upload-artifact@v2
