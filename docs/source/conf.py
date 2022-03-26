@@ -10,9 +10,10 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath("../../src"))
 
 
 # -- Project information -----------------------------------------------------
@@ -33,11 +34,36 @@ release = "0.1"
 extensions = [
     "myst_parser",
     "sphinxcontrib.mermaid",
+    "sphinxcontrib.autodoc_pydantic",
+    "sphinx.ext.napoleon",
     "sphinx.ext.duration",
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.viewcode",
+    # "sphinx_autodoc_typehints",
 ]
 
+autosummary_generate = True
+autosummary_imported_members = False
+
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False  # Force consistency, leave only Google
+
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_rtype = False  # More legible
+napoleon_preprocess_types = True
+
+autoclass_content = "both"  # include both class docstring and __init__
+autodoc_default_options = {
+    # Make sure that any autodoc declarations show the right members
+    "members": True,
+    "inherited-members": True,
+    "private-members": True,
+    "show-inheritance": True,
+}
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -62,3 +88,5 @@ html_static_path = ["_static"]
 myst_enable_extensions = [
     "colon_fence",
 ]
+
+numfig = True
