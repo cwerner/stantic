@@ -139,7 +139,17 @@ class Server:
         search: Optional[str] = None,
         tag_off: Optional[bool] = False,
     ) -> Optional[Union[Entity, Iterable[Entity]]]:
-        """get all or specified entity from server"""
+        """Get all or specified entity from server
+
+        Args:
+            E: entity type to get
+            id: entity id
+            search: filter entitites by this search string
+            tag_off: (will be removed later)
+
+        Returns:
+            Entity or list of requested entities
+        """
 
         url = self._get_endpoint_url(E, id=id)
 
@@ -177,8 +187,16 @@ class Server:
         else:
             raise NotImplementedError(f"Raised status code {r.status_code}")
 
-    def update(self, entity: Entity):
-        """update/ patch an entity"""
+    def update(self, entity: Entity) -> None:
+        """Update/ patch an entity on the server
+
+        Args:
+            entity: the updated entity to be pushed to the server
+
+        Returns:
+            Nothing
+
+        """
 
         id = entity.id
         if not id:
@@ -194,8 +212,16 @@ class Server:
     def update_field(
         self, E: Type[Entity], id: int, payload: Dict[str, Any]
     ) -> Optional[Iterable[Entity]]:
-        """update only certain fields of an entity"""
+        """Update specific fields of an entity on the server
 
+        Args:
+            E: entity type to update
+            id: entity id
+            payload: entity fields and values to be used in update
+
+        Returns:
+            Entity or list of requested entities
+        """
         payload_fields = set(payload.keys())
 
         if not payload_fields.issubset(E.__fields__):
@@ -213,7 +239,14 @@ class Server:
         return self.get(E, id=id)
 
     def post(self, entity: Entity) -> Entity:
-        """post a thing to the server"""
+        """Post an entity to the server
+
+        Args:
+            entity: entity instance
+
+        Returns:
+            Posted entity including assigned id
+        """
 
         url = self._get_endpoint_url(entity)
         res = requests.post(url, json=entity.dict(by_alias=True))
@@ -235,6 +268,17 @@ class Server:
         search: Optional[str] = None,
         tag_off: Optional[bool] = False,
     ) -> None:
+        """Delete all or specified entity from server
+
+        Args:
+            E: entity type to delete
+            id: entity id
+            search: filter entitites by this search string
+            tag_off: (will be removed later)
+
+        Returns:
+            Nothing
+        """
 
         url = self._get_endpoint_url(E, id=id)
 
@@ -265,8 +309,17 @@ class Server:
         datastream: Datastream,
         df: pd.DataFrame,
         batch_mode: Optional[bool] = False,
-    ):
-        """push data to datastream"""
+    ) -> None:
+        """Push data to datastream
+
+        Args:
+            datastream: target datastream
+            df: dataframe with observation values
+            batch_mode: not implemented yet
+
+        Returns:
+            Nothing
+        """
 
         if batch_mode:
             raise NotImplementedError
@@ -304,6 +357,16 @@ class Server:
         dt_min: Optional[datetime.datetime] = None,
         dt_max: Optional[datetime.datetime] = None,
     ) -> pd.DataFrame:
+        """Pull data from datastream
+
+        Args:
+            datastream: source datastream
+            dt_min: start datetime
+            dt_max: end datetime
+
+        Returns:
+            Dataframe with observation values
+        """
 
         if dt_min and dt_max:
             if dt_min > dt_max:
@@ -349,6 +412,14 @@ class Server:
     def dump(
         self, entity: Optional[Union[Type[Entity], Iterable[Type[Entity]]]] = None
     ) -> Dict[Type[Entity], List[Entity]]:
+        """Get all instances of requested entity type
+
+        Args:
+            entity: entity type or list of entity types
+
+        Returns:
+            Dict with entities
+        """
         """return all data for given entity types"""
         entities = entity or [Sensor, Thing, Location, Datastream]
         if not isinstance(entities, list):
@@ -367,7 +438,7 @@ class Server:
 
     @property
     def is_alive(self):
-        """is the server alive"""
+        """Check if the server can be reached"""
 
         try:
             r = requests.get(self.url)

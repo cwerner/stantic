@@ -45,6 +45,8 @@ class Link(BaseModel):
 
 # Thing --
 class ThingProperty(Property):
+    """Thing properties"""
+
     id: str
     project: str
     station_id: str
@@ -56,6 +58,8 @@ class ThingProperty(Property):
 
 # base model
 class Entity(BaseModel):
+    """STA base model"""
+
     id: Optional[int] = None  # Field(None, alias="@iot.id")
     name: str
     description: str
@@ -68,6 +72,8 @@ class Entity(BaseModel):
 
 
 class Thing(Entity):
+    """STA thing entity - a measurement tower or field station"""
+
     _tag: Literal["Thing"] = "Thing"
     properties: ThingProperty
 
@@ -78,11 +84,15 @@ class LocationProperty(BaseModel):
 
 
 class LocationGeo(BaseModel):
+    """Location coordinates"""
+
     type: Literal["Point"] = "Point"
     coordinates: Tuple[float, float]  # (lon. lat)
 
 
 class Location(Entity):
+    """STA location entity"""
+
     _tag: Literal["Location"] = "Location"
     properties: LocationProperty
     encodingType: Literal["application/geo+json"] = "application/geo+json"
@@ -92,6 +102,8 @@ class Location(Entity):
 
 # ObservedProperty --
 class ObservedProperty(Entity):
+    """Observation properties"""
+
     _tag: Literal["ObservedProperty"] = "ObservedProperty"
     definition: str
     properties: Property
@@ -99,12 +111,16 @@ class ObservedProperty(Entity):
 
 # Sensor --
 class SensorProperty(Property):
+    """Sensor properties"""
+
     pid: str
     sn: str
     offset: float
 
 
 class Sensor(Entity):
+    """STA sensor entity"""
+
     _tag: Literal["Sensor"] = "Sensor"
     encodingType: str
     metadata: str
@@ -113,6 +129,8 @@ class Sensor(Entity):
 
 # Datastream --
 class Unit(BaseModel):
+    """Scientific unit"""
+
     name: str
     symbol: str
     definition: str
