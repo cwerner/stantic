@@ -9,6 +9,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install stantic
+      run: |
+        pip install -e .
+
     - name: Create build environment
       working-directory: docs
       run: mkdir build
