@@ -2,12 +2,13 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="🧰 API Reference" href="reference.html" /><link rel="prev" title="Stantic documentation" href="index.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="🧰 API reference" href="api.html" /><link rel="prev" title="Stantic documentation" href="index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
         <title>🚀 Getting started - Stantic 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -153,7 +154,11 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">🚀 Getting started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">🧰 API Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">🧰 API reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/entities.html">Entitites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/server.html">Server</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">⁉️ FAQ</a></li>
 </ul>
 
@@ -190,25 +195,29 @@
           <div class="section" id="getting-started">
 <h1>🚀 Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">#</a></h1>
 <p>This section shows you the core building blocks of <code class="docutils literal notranslate"><span class="pre">stantic</span></code> and you to get started quickly! Let’s dive in…</p>
-<div class="mermaid">
+<div class="figure align-default" id="id1">
+<span id="sta-scheme"></span><div class="mermaid">
             flowchart LR
     id1("Thing 🗼") -- has--&gt; id2("Datastream 📈") -- has --&gt; id3("Observation 🔢")
-    id2 -- has --&gt; id4("Sensor 🔬")
-    id5("Location 🌍") -- has --&gt; id1
-    id6(ObservationProperty) -.- id3
-        </div></div>
+    id2 -.- id4("Sensor 🔬")
+    id5("Location 🌍") -.- id1
+    id6("ObservationProperty ⚙️") -.- id2
+    id7("FeatureOfInterest 🧩") -.- id3
+        </div><p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">STA entity scheme. All entities are modeled as Pydantic classes in <code class="docutils literal notranslate"><span class="pre">stantic</span></code></span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+</div>
+</div>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="reference.html">
+          <a class="next-page" href="api.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">🧰 API Reference</div>
+                <div class="title">🧰 API reference</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
