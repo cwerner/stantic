@@ -4,5 +4,5 @@
 .. autosummary::
    :toctree: _autosummary
 
-   stantic.server.Server
+   stantic.server
 :::
