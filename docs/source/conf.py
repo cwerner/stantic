@@ -13,10 +13,9 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../.."))
-sys.path.insert(0, os.path.abspath("../.."))
+# sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../src/"))
-sys.path.insert(0, os.path.abspath("../../src/static/"))
+# sys.path.insert(0, os.path.abspath("../../src/static/"))
 
 
 # -- Project information -----------------------------------------------------
@@ -69,6 +68,7 @@ autodoc_default_options = {
 
 autodoc_pydantic_model_show_json = False
 autodoc_pydantic_model_show_config = False
+autodoc_typehints_format = "short"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
