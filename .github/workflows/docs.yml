@@ -11,7 +11,7 @@ jobs:
 
     - name: Install stantic
       run: |
-        pip install -e .
+        python3 -m pip install --no-build-isolation -e .
 
     - name: Create build environment
       working-directory: docs
