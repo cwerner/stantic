@@ -1,7 +1,11 @@
 # 🧰 API reference
 
-:::{toctree}
-api/entities.md
-api/server.md
+:::{eval-rst}
+.. autosummary::
+   :toctree: _autosummary
+   :recursive:
+
+   stantic.models
+   stantic.server
 
 :::
