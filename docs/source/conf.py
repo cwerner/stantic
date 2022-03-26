@@ -49,14 +49,13 @@ autosummary_imported_members = False
 
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False  # Force consistency, leave only Google
-
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
 napoleon_include_special_with_doc = True
 napoleon_use_rtype = False  # More legible
 napoleon_preprocess_types = True
 
-autoclass_content = "both"  # include both class docstring and __init__
+autoclass_content = "class"  # include both class docstring and __init__
 autodoc_default_options = {
     # Make sure that any autodoc declarations show the right members
     "members": True,
@@ -64,6 +63,10 @@ autodoc_default_options = {
     "private-members": True,
     "show-inheritance": True,
 }
+
+autodoc_pydantic_model_show_json = False
+autodoc_pydantic_model_show_config = False
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
