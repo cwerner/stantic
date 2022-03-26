@@ -1,0 +1,5 @@
+﻿stantic.server
+==============
+
+.. automodule:: stantic.server
+   :members:  
