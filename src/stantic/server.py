@@ -17,12 +17,14 @@ DT_FORMAT = "%Y-%m-%dT%H:%M:%S%Z"
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
+    """check that the dataframe has an datetime index and excatly one col named result"""
     i_type = df.index.inferred_type
     c_names = df.columns.values.tolist()
     return True if ((i_type == "datetime64") and (c_names == ["result"])) else False
 
 
-def convert_df_to_jsonable_array(df: pd.DataFrame) -> List[List[str, float]]:
+def convert_df_to_jsonable_array(df: pd.DataFrame) -> List[Tuple[str, float]]:
+    """convert df two a list of lists (that contain datetime and result"""
     # TODO: check if format string is valid
     dates = [datetime.datetime.strftime(d.to_pydatetime(), DT_FORMAT) for d in df.index]
     values = df.result
