@@ -50,10 +50,18 @@ class ThingProperty(Property):
     id: str
     project: str
     station_id: str
+
     tech_person: Person
+    """The person responsible for technical maintenance."""
+
     science_person: Person
+    """The person in charge of scientific questions (usually the PI)."""
+
     data_person: Person
+    """The person handling the data acquisition and/ or processing."""
+
     qaqc_person: Person
+    """The person handling the data quality control."""
 
 
 # base model
@@ -61,8 +69,14 @@ class Entity(BaseModel):
     """STA base model"""
 
     id: Optional[int] = None  # Field(None, alias="@iot.id")
+    """The id is issued by the FROST server once the entity is posted."""
+
     name: str
+    """Short and unique name of the entity."""
+
     description: str
+    """Description of the entity (long-form)."""
+
     properties: Any
 
     class Config:
@@ -88,6 +102,7 @@ class LocationGeo(BaseModel):
 
     type: Literal["Point"] = "Point"
     coordinates: Tuple[float, float]  # (lon. lat)
+    """The geographic location (lon, lat)."""
 
 
 class Location(Entity):
@@ -114,8 +129,13 @@ class SensorProperty(Property):
     """Sensor properties"""
 
     pid: str
+    """The device ID in the institutes registry."""
+
     sn: str
+    """The serial number of the device (issued by the manufacturer)."""
+
     offset: float
+    """Remove?"""
 
 
 class Sensor(Entity):
@@ -132,8 +152,13 @@ class Unit(BaseModel):
     """Scientific unit"""
 
     name: str
+    """Name of the unit."""
+
     symbol: str
+    """Scientific symbol."""
+
     definition: str
+    """A proper definition if necessary."""
 
 
 class Datastream(Entity):
@@ -148,4 +173,7 @@ class Datastream(Entity):
 # Observation --
 class Observation(BaseModel):
     phenomenonTime: datetime
+    """Datetime of measurement reading."""
+
     result: float
+    """Observed value."""

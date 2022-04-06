@@ -61,13 +61,17 @@ autoclass_content = "class"  # include both class docstring and __init__
 autodoc_default_options = {
     # Make sure that any autodoc declarations show the right members
     "members": True,
-    "inherited-members": True,
-    "private-members": True,
+    "inherited-members": False,
+    "private-members": False,
     "show-inheritance": True,
 }
 
 autodoc_pydantic_model_show_json = False
 autodoc_pydantic_model_show_config = False
+autodoc_pydantic_model_show_config_summary = False
+autodoc_pydantic_model_show_config_member = False
+autodoc_pydantic_model_show_field_summary = True
+autodoc_pydantic_model_summary_list_order = "bysource"
 autodoc_typehints_format = "short"
 
 # Add any paths that contain templates here, relative to this directory.
