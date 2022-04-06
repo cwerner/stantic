@@ -1,7 +1,7 @@
 import datetime
 import json
 import re
-from typing import Any, Dict, Iterable, List, Optional, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import pandas as pd
 import requests
@@ -20,6 +20,13 @@ def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
     i_type = df.index.inferred_type
     c_names = df.columns.values.tolist()
     return True if ((i_type == "datetime64") and (c_names == ["result"])) else False
+
+
+def convert_df_to_jsonable_array(df: pd.DataFrame) -> List[List[str, float]]:
+    # TODO: check if format string is valid
+    dates = [datetime.datetime.strftime(d.to_pydatetime(), DT_FORMAT) for d in df.index]
+    values = df.result
+    return list(zip(dates, values))
 
 
 def check_if_observations_exist(url: str, dt: datetime.datetime) -> Iterable[int]:
@@ -308,47 +315,67 @@ class Server:
         self,
         datastream: Datastream,
         df: pd.DataFrame,
-        batch_mode: Optional[bool] = False,
+        batch_mode: Optional[bool] = True,
     ) -> None:
         """Push data to datastream
 
         Args:
             datastream: target datastream
             df: dataframe with observation values
-            batch_mode: not implemented yet
+            batch_mode: push data as one array instead of iterative pushes (much more efficient)
 
         Returns:
             Nothing
         """
 
-        if batch_mode:
-            raise NotImplementedError
-
         # validate data dataframe
         if not expected_cols_and_dtypes(df):
             raise ValueError("Dataframe is not compatible")
 
-        url = self._get_endpoint_url(datastream) + "/Observations"
+        if batch_mode:
+            url = self.url + "/CreateObservations"
 
-        for timestamp, row in df.iterrows():
-            # check if data already exist and delete the entry/ entries
-            existing_ids = check_if_observations_exist(
-                url, dt=timestamp.to_pydatetime()
-            )
-            for id in existing_ids:
-                r = requests.delete(f"{url}({id})")
-                if r.status_code != 200:
-                    raise requests.exceptions.RequestException(
-                        "DELETE request not successful"
-                    )
+            # push data at once with one big array
+            array = convert_df_to_jsonable_array(df)
 
-            dt_str = datetime.datetime.strftime(timestamp.to_pydatetime(), DT_FORMAT)
-            payload = {"phenomenonTime": dt_str, "result": str(row["result"])}
+            payload = {
+                "components": ["phenomenonTime", "result"],
+                "dataArray@iot.count": len(array),
+                "dataArray": array,
+                "Datastream": {"@iot.id": datastream.id},
+            }
+
             r = requests.post(url, json=payload)
+
             if r.status_code != 201:
                 raise requests.RequestException(
-                    f"DATA PUSH Observation request error {r.status_code}"
+                    f"DATA PUSH (batched) Observation request error {r.status_code}"
                 )
+        else:
+            url = self._get_endpoint_url(datastream) + "/Observations"
+
+            for timestamp, row in df.iterrows():
+                # check if data already exist and delete the entry/ entries
+                existing_ids = check_if_observations_exist(
+                    url, dt=timestamp.to_pydatetime()
+                )
+                for id in existing_ids:
+                    r = requests.delete(f"{url}({id})")
+                    if r.status_code != 200:
+                        raise requests.exceptions.RequestException(
+                            "DELETE request not successful"
+                        )
+
+                dt_str = datetime.datetime.strftime(
+                    timestamp.to_pydatetime(), DT_FORMAT
+                )
+                payload = {"phenomenonTime": dt_str, "result": str(row["result"])}
+                r = requests.post(url, json=payload)
+
+                if r.status_code != 201:
+                    raise requests.RequestException(
+                        f"DATA PUSH Observation request error {r.status_code}"
+                    )
 
     def pull_data(
         self,
