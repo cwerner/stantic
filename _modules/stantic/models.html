@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
         <title>stantic.models - Stantic 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
@@ -245,10 +245,18 @@
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">project</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">station_id</span><span class="p">:</span> <span class="nb">str</span>
+
     <span class="n">tech_person</span><span class="p">:</span> <span class="n">Person</span>
+    <span class="sd">"""The person responsible for technical maintenance."""</span>
+
     <span class="n">science_person</span><span class="p">:</span> <span class="n">Person</span>
+    <span class="sd">"""The person in charge of scientific questions (usually the PI)."""</span>
+
     <span class="n">data_person</span><span class="p">:</span> <span class="n">Person</span>
-    <span class="n">qaqc_person</span><span class="p">:</span> <span class="n">Person</span></div>
+    <span class="sd">"""The person handling the data acquisition and/ or processing."""</span>
+
+    <span class="n">qaqc_person</span><span class="p">:</span> <span class="n">Person</span>
+    <span class="sd">"""The person handling the data quality control."""</span></div>
 
 
 <span class="c1"># base model</span>
@@ -256,8 +264,14 @@
     <span class="sd">"""STA base model"""</span>
 
     <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Field(None, alias="@iot.id")</span>
+    <span class="sd">"""The id is issued by the FROST server once the entity is posted."""</span>
+
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""Short and unique name of the entity."""</span>
+
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""Description of the entity (long-form)."""</span>
+
     <span class="n">properties</span><span class="p">:</span> <span class="n">Any</span>
 
     <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
@@ -282,7 +296,8 @@
     <span class="sd">"""Location coordinates"""</span>
 
     <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"Point"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Point"</span>
-    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>  <span class="c1"># (lon. lat)</span></div>
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>  <span class="c1"># (lon. lat)</span>
+    <span class="sd">"""The geographic location (lon, lat)."""</span></div>
 
 
 <div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
@@ -309,8 +324,13 @@
     <span class="sd">"""Sensor properties"""</span>
 
     <span class="n">pid</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""The device ID in the institutes registry."""</span>
+
     <span class="n">sn</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span></div>
+    <span class="sd">"""The serial number of the device (issued by the manufacturer)."""</span>
+
+    <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="sd">"""Remove?"""</span></div>
 
 
 <div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
@@ -327,8 +347,13 @@
     <span class="sd">"""Scientific unit"""</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""Name of the unit."""</span>
+
     <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span></div>
+    <span class="sd">"""Scientific symbol."""</span>
+
+    <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="sd">"""A proper definition if necessary."""</span></div>
 
 
 <div class="viewcode-block" id="Datastream"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Datastream">[docs]</a><span class="k">class</span> <span class="nc">Datastream</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
@@ -343,7 +368,10 @@
 <span class="c1"># Observation --</span>
 <span class="k">class</span> <span class="nc">Observation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">phenomenonTime</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="sd">"""Datetime of measurement reading."""</span>
+
     <span class="n">result</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="sd">"""Observed value."""</span>
 </pre></div>
         </article>
       </div>
