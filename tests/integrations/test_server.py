@@ -4,14 +4,9 @@ import pytest
 
 from stantic.server import Server
 
-# from testcontainers.compose import DockerCompose
-
-# COMPOSE_PATH = "." #the folder containing docker-compose.yml
-
 
 @pytest.mark.usefixtures("server")
 def test_server_is_alive(server: Server):
-    print(f"Server status: {server.is_alive}")
     assert server.is_alive is True
 
     # with DockerCompose(
