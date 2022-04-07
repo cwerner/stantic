@@ -17,7 +17,7 @@ DT_FORMAT = "%Y-%m-%dT%H:%M:%S%Z"
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
-    """check that the dataframe has an datetime index and excatly one col named result"""
+    """check that the dataframe has an datetime index and exactly one col named result"""
     i_type = df.index.inferred_type
     c_names = df.columns.values.tolist()
     return True if ((i_type == "datetime64") and (c_names == ["result"])) else False
@@ -50,8 +50,12 @@ def get_endpoint_from_entity(entity: Union[Entity, Type[Entity]]) -> str:
 
     if isinstance(entity, Entity):
         e_type = entity.__class__.__name__  # instance passed
-    else:
+    elif isinstance(entity, type):
         e_type = entity.__name__  # Class/ Type passed
+    elif isinstance(entity, str):
+        e_type = entity  # Entity name as string
+    else:
+        raise NotImplementedError
 
     if e_type not in [
         "Thing",
