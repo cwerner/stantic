@@ -45,7 +45,7 @@ def check_if_observations_exist(url: str, dt: datetime.datetime) -> Iterable[int
     return [int(x["@iot.id"]) for x in result["value"]] if "value" in result else []
 
 
-def get_endpoint_from_entity(entity: Union[Entity, Type[Entity]]) -> str:
+def get_endpoint_from_entity(entity: Union[str, Entity, Type[Entity]]) -> str:
     """get endpoint from entity type"""
 
     if isinstance(entity, Entity):

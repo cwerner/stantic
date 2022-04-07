@@ -45,6 +45,11 @@ def test_get_endpoint_from_entity_invalid_entity():
         get_endpoint_from_entity("ThisShouldNotWork")
 
 
+def test_get_endpoint_from_entity_invalid_entity_type():
+    with pytest.raises(NotImplementedError):
+        get_endpoint_from_entity(12)
+
+
 def test_get_endpoint_from_entity_using_str():
     assert get_endpoint_from_entity("Thing") == "Things"
     assert get_endpoint_from_entity("ObservedProperty") == "ObservedProperties"
