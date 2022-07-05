@@ -254,14 +254,13 @@ class Server:
         payload = entity.dict(by_alias=True)
 
         # currently only checking for Things
-        if isinstance(entity, (Thing,)):
+        if isinstance(entity, (Thing,)) and strict:
             entities = self.get(entity.__class__)
             if len(entities) > 0:
                 if any([e.name == entity.name for e in entities]):
                     print(f"{entity.__class__.__name__} already exists!")
                     print("Skipping...")
-                    return None
-                    # raise ValueError(f"{entity.__class__.__name__} already exists!")
+                    raise ValueError(f"{entity.__class__.__name__} already exists!")
 
         # print("TODO: Fix this? id has to be deleted otherwise server complains...?")
         if "id" in payload:
@@ -269,12 +268,12 @@ class Server:
         res = requests.post(url, json=payload)
 
         if res.status_code != 201:
-            print(f"Something went wrong in POST: {res.status_code}: {res.text}")
-            raise ValueError
+            raise ValueError(
+                f"Something went wrong in POST: {res.status_code}: {res.text}"
+            )
         else:
             # retrieve id from frost server and update entity
             entity.id = self._get_id_from_url(res.headers["location"])
-            # print(f"Success: POST {entity}")
 
         return entity
 
