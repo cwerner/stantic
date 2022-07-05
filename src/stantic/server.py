@@ -208,7 +208,7 @@ class Server:
 
         headers = {"content-type": "application/json"}
         res = requests.patch(url, data=json.dumps(entity.dict()), headers=headers)
-        if res.status_code != 200:
+        if res.status_code != 200:  # pragma: no cover
             print(f"Update not successful. Return status {res.status_code}")
 
     def update_field(
@@ -227,20 +227,19 @@ class Server:
         payload_fields = set(payload.keys())
 
         if not payload_fields.issubset(E.__fields__):
-            print(f"Provided payload does not match entity {E}")
-            raise ValueError
+            raise ValueError(f"Provided payload does not match entity {E}")
 
         url = self._get_endpoint_url(E, id=id)
 
         headers = {"content-type": "application/json"}
         res = requests.patch(url, data=json.dumps(payload), headers=headers)
-        if res.status_code != 200:
+        if res.status_code != 200:  # pragma: no cover
             print(f"Update not successful. Return status {res.status_code}")
 
         # get patched entity and return it
         return self.get(E, id=id)
 
-    def post(self, entity: Entity, strict: Optional[bool] = True) -> Entity:
+    def post(self, entity: Entity, strict: Optional[bool] = True) -> Optional[Entity]:
         """Post an entity to the server
 
         Args:
