@@ -50,3 +50,11 @@ def test_server_get_thing_search(server_with_data: Server, searchterm: str):
 
     assert isinstance(thing, Thing)
     assert thing.name == "Graswang"
+
+
+def test_server_get_thing_search_no_hits(server_with_data: Server):
+    thing_id = server_with_data.get(Thing, id=999)  # search="ImaginarySite")
+    thing_search = server_with_data.get(Thing, search="ImaginarySite")
+
+    assert len(thing_id) == 0
+    assert len(thing_search) == 0

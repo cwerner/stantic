@@ -1,4 +1,5 @@
 import datetime
+import json
 import time
 
 import pytest
@@ -25,6 +26,37 @@ def test_check_if_observations_exist(server_with_data: Server):
 
     existing_ids = check_if_observations_exist(test_url, dt=invalid_date)
     assert len(existing_ids) == 0
+
+
+def test_get_endpoint_url_with_id(server_with_data: Server):
+    url = server_with_data._get_endpoint_url(Datastream, id=6)
+    assert url == "http://0.0.0.0:8080/FROST-Server/v1.1/Datastreams(6)"
+
+
+def test_get_endpoint_url_without_id(server_with_data: Server):
+    url = server_with_data._get_endpoint_url(Datastream)
+    assert url == "http://0.0.0.0:8080/FROST-Server/v1.1/Datastreams"
+
+
+def test_get_id_from_url(server_with_data: Server):
+    valid_url = server_with_data._get_endpoint_url(Datastream, id=6)
+    invalid_url = valid_url[:-3]
+
+    id = server_with_data._get_id_from_url(valid_url)
+    assert id == 6
+
+    with pytest.raises(ValueError):
+        server_with_data._get_id_from_url(invalid_url)
+
+
+def test_extract_ids_from_navlinks(server_with_data: Server):
+    datastream = server_with_data.get(Datastream, id=6)
+
+    data_json_with_ids = server_with_data._extract_ids_from_navlinks(datastream.json())
+
+    # associated thing id should be 2 (datastream with id 6 is from graswang)
+    # TODO: make this more robust
+    assert json.loads(data_json_with_ids)["Thing"]["id"] == 2
 
 
 # ============================================================================
