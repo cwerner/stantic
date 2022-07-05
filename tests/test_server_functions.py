@@ -10,18 +10,17 @@ from stantic.server import (
 
 
 def test_expected_cols_and_dtypes():
+    dt_index = pd.date_range(start="2010-01-01", end="2010-01-05")
     df_good = pd.DataFrame(
         data={"result": [1, 2, 3, 4, 5]},
-        index=pd.date_range("2010-01-01", "2010-01-05"),
+        index=dt_index,
     )
     df_bad_index = pd.DataFrame(data={"result": [1, 2, 3, 4, 5]})
     df_bad_multiple_cols = pd.DataFrame(
         data={"result": [1, 2, 3, 4, 5], "result2": [6, 7, 8, 9, 10]},
-        index=pd.date_range("2010-01-01", "2010-01-05"),
+        index=dt_index,
     )
-    df_bad_colname = pd.DataFrame(
-        data={"var1": [1, 2, 3, 4, 5]}, index=pd.date_range("2010-01-01", "2010-01-05")
-    )
+    df_bad_colname = pd.DataFrame(data={"var1": [1, 2, 3, 4, 5]}, index=dt_index)
     assert expected_cols_and_dtypes(df_good) is True
     assert expected_cols_and_dtypes(df_bad_index) is False
     assert expected_cols_and_dtypes(df_bad_multiple_cols) is False
