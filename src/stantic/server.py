@@ -103,26 +103,7 @@ class Server:
         return id
 
     def _extract_ids_from_navlinks(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        """messy!"""
-
-        if "value" in data:
-            for d in data["value"]:
-                links = [x for x in d if "@iot.navigationLink" in x]
-                for link in links:
-                    for e in [ObservedProperty, Sensor, Thing]:
-                        if e.__name__ in link:
-                            url = self.url + d[link].split("FROST-Server/v1.1")[-1]
-
-                            _j = requests.get(url).json()
-                            if "value" in _j:
-                                d[e.__name__] = [
-                                    {"@iot.id": x["@iot.id"]}
-                                    for x in requests.get(url).json()["value"]
-                                ]
-                            else:
-                                d[e.__name__] = {"@iot.id": _j["@iot.id"]}
-                            continue
-        else:
+        def extract_ids(data):
             links = [x for x in data if "@iot.navigationLink" in x]
             for link in links:
                 for e in [ObservedProperty, Sensor, Thing]:
@@ -138,6 +119,11 @@ class Server:
                         else:
                             data[e.__name__] = {"@iot.id": _j["@iot.id"]}
                         continue
+            return data
+
+        [extract_ids(d) for d in data["value"]] if "value" in data else extract_ids(
+            data
+        )
 
         return data
 
@@ -147,7 +133,6 @@ class Server:
         E: Type[Entity],
         id: Optional[int] = None,
         search: Optional[str] = None,
-        # tag_off: Optional[bool] = False,
     ) -> Optional[Union[Entity, Iterable[Entity]]]:
         """Get all or specified entity from server
 
@@ -155,7 +140,6 @@ class Server:
             E: entity type to get
             id: entity id
             search: filter entitites by this search string
-            tag_off: (will be removed later)
 
         Returns:
             Entity or list of requested entities
@@ -168,15 +152,15 @@ class Server:
         #    url += f"?$filter=startswith(name, '{self._tag}')"
 
         if search:
-            if "$filter" in url:
-                url += f" and substringof(name, '{search}')"
-            else:
-                url += f"?$filter=substringof('{search}', name)"
+            # if "$filter" in url:
+            #     url += f" and substringof(name, '{search}')"
+            # else:
+            url += f"?$filter=substringof('{search}', name)"
 
-        r = requests.get(url)
+        res = requests.get(url)
 
-        if r.status_code == 200:
-            data = self._extract_ids_from_navlinks(r.json())
+        if res.status_code == 200:
+            data = self._extract_ids_from_navlinks(res.json())
 
             if id:
                 obj = E.parse_obj(data)
@@ -194,13 +178,16 @@ class Server:
                 if search and len(objs) == 1:
                     return objs[0]
 
+                if len(objs) == 0:
+                    print("No entries found.")
+
                 return objs
 
-        elif r.status_code == 404:
-            print(f"No entities found. <{r.status_code}>")
-            return None
-        else:
-            raise NotImplementedError(f"Raised status code {r.status_code}")
+        elif res.status_code == 404:
+            print(f"Requested id not found. <{res.status_code}>")
+            return []
+        else:  # pragma: no cover
+            raise NotImplementedError(f"Raised status code {res.status_code}")
 
     def update(self, entity: Entity) -> None:
         """Update/ patch an entity on the server
