@@ -35,12 +35,10 @@ def check_if_observations_exist(url: str, dt: datetime.datetime) -> Iterable[int
     offset = datetime.timedelta(seconds=0.1)
     t1 = datetime.datetime.strftime(dt - offset, DT_FORMAT)
     t2 = datetime.datetime.strftime(dt + offset, DT_FORMAT)
-
-    r = requests.get(
-        f"{url}?$filter=phenomenonTime ge {t1}Z and phenomenonTime le {t2}Z &$select=@iot.id"
+    res = requests.get(
+        f"{url}?$filter=phenomenonTime ge {t1} and phenomenonTime le {t2} &$select=@iot.id"
     )
-
-    result = r.json()
+    result = res.json()
     return [int(x["@iot.id"]) for x in result["value"]] if "value" in result else []
 
 

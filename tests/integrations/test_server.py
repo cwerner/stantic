@@ -1,14 +1,30 @@
+import datetime
 import time
 
 import pytest
 
 from stantic.models import Datastream, Sensor, Thing
-from stantic.server import Server
+from stantic.server import check_if_observations_exist, Server
 
 
 # @pytest.mark.usefixtures("server")
 def test_server_is_alive(server: Server):
     assert server.is_alive is True
+
+
+def test_check_if_observations_exist(server_with_data: Server):
+    valid_date = datetime.datetime(2022, 4, 6, 0, 3, 0)
+    invalid_date = datetime.datetime(1922, 1, 1, 0, 10, 0)
+
+    datastream = server_with_data.get(Datastream, id=6)
+    test_url = server_with_data._get_endpoint_url(datastream) + "/Observations"
+
+    existing_ids = check_if_observations_exist(test_url, dt=valid_date)
+    assert len(existing_ids) == 1
+    assert all([type(x) is int for x in existing_ids]) is True
+
+    existing_ids = check_if_observations_exist(test_url, dt=invalid_date)
+    assert len(existing_ids) == 0
 
 
 # ============================================================================

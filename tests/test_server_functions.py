@@ -32,9 +32,9 @@ def test_convert_df_to_jsonable_array():
         data={"result": [1, 2, 3]}, index=pd.date_range("2010-01-01", "2010-01-03")
     )
     target = [
-        ("2010-01-01T00:00:00", 1),
-        ("2010-01-02T00:00:00", 2),
-        ("2010-01-03T00:00:00", 3),
+        ("2010-01-01T00:00:00.000Z", 1),
+        ("2010-01-02T00:00:00.000Z", 2),
+        ("2010-01-03T00:00:00.000Z", 3),
     ]
     assert convert_df_to_jsonable_array(df) == target
 
