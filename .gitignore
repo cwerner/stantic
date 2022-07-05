@@ -1,3 +1,9 @@
+.DS_Store
+.donottrack
+.vscode
+
+docs/source/_autosummary
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
