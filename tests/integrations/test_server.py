@@ -2,34 +2,53 @@ import time
 
 import pytest
 
+from stantic.models import Datastream, Sensor, Thing
 from stantic.server import Server
 
 
-@pytest.mark.usefixtures("server")
+# @pytest.mark.usefixtures("server")
 def test_server_is_alive(server: Server):
     assert server.is_alive is True
 
-    # with DockerCompose(
-    #     COMPOSE_PATH,
-    #     compose_file_name=["docker-compose.yaml"],
-    #     pull=False) as compose:
 
-    #     cmd = compose.docker_compose_command()
-    #     print(cmd)
+# ============================================================================
+# test get functionality
 
-    #     compose.wait_for("http://172.0.0.1:8080/FROST-Server/v1.1")
-    #     print('mhm')
-    #     time.sleep(10)
-
-    #     print(compose.get_logs())
+# def test_server_get_thing_total_count(server_with_data: Server):
+#     things = server_with_data.get(Thing)
+#     assert len(things) == 2
+#     assert all([isinstance(t, Thing) for t in things])
 
 
-@pytest.mark.usefixtures("server")
-def test_server_stuff(server: Server):
-    print("Wasting time...")
-    for i in range(4):
-        print(i)
-        time.sleep(2)
+# def test_server_get_thing_specific_id(server_with_data: Server):
+#     thing = server_with_data.get(Thing, id=2)
 
-    a = 1
-    assert a == 1
+#     assert type(thing) is not list
+#     assert isinstance(thing, Thing)
+
+
+# def test_server_get_thing_search(server_with_data: Server):
+#     thing = server_with_data.get(Thing, search="Graswang")
+
+#     assert type(thing) is not list
+#     assert isinstance(thing, Thing)
+
+
+# def test_server_get_thing_partial_search(server_with_data: Server):
+#     thing = server_with_data.get(Thing, search="Gras")
+
+#     assert type(thing) is not list
+#     assert isinstance(thing, Thing)
+
+
+# @pytest.mark.usefixtures("server_with_data")
+# def test_server_add_data(server_with_data: Server):
+#     print("\nWasting time...")
+#     for i in range(4):
+#         print(i)
+#         time.sleep(2)
+
+#     things = server_with_data.get(Thing)
+
+
+#     streams = server_with_data.get(Datastream)
