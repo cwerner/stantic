@@ -13,7 +13,7 @@ __all__ = ["Server"]
 # type definitions
 Url = str
 
-DT_FORMAT = "%Y-%m-%dT%H:%M:%S%Z"
+DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
@@ -27,8 +27,7 @@ def convert_df_to_jsonable_array(df: pd.DataFrame) -> List[Tuple[str, float]]:
     """convert df two a list of lists (that contain datetime and result"""
     # TODO: check if format string is valid
     dates = [datetime.datetime.strftime(d.to_pydatetime(), DT_FORMAT) for d in df.index]
-    values = df.result
-    return list(zip(dates, values))
+    return list(zip(dates, df.result))
 
 
 def check_if_observations_exist(url: str, dt: datetime.datetime) -> Iterable[int]:
@@ -75,7 +74,7 @@ def get_endpoint_from_entity(entity: Union[str, Entity, Type[Entity]]) -> str:
 class Server:
     """Server model of a FROST server instance"""
 
-    _tag = "cw_"  # filter all server entities by this name tag for now
+    # _tag = "cw_"  # filter all server entities by this name tag for now
 
     def __init__(self, url: Url):
         self._url = url
@@ -150,7 +149,7 @@ class Server:
         E: Type[Entity],
         id: Optional[int] = None,
         search: Optional[str] = None,
-        tag_off: Optional[bool] = False,
+        # tag_off: Optional[bool] = False,
     ) -> Optional[Union[Entity, Iterable[Entity]]]:
         """Get all or specified entity from server
 
@@ -167,14 +166,14 @@ class Server:
         url = self._get_endpoint_url(E, id=id)
 
         # filter response for "cw_" entities, turn-off tag limit with tag_off=True
-        if hasattr(Server, "_tag") and not tag_off:
-            url += f"?$filter=startswith(name, '{self._tag}')"
+        # if hasattr(Server, "_tag") and not tag_off:
+        #    url += f"?$filter=startswith(name, '{self._tag}')"
 
         if search:
             if "$filter" in url:
                 url += f" and substringof(name, '{search}')"
             else:
-                url += f"$filter=substringof('{search}', name)"
+                url += f"?$filter=substringof('{search}', name)"
 
         r = requests.get(url)
 
@@ -193,7 +192,12 @@ class Server:
                     if "@iot.id" in d:
                         obj.id = int(d["@iot.id"])
                     objs.append(obj)
+
+                if search and len(objs) == 1:
+                    return objs[0]
+
                 return objs
+
         elif r.status_code == 404:
             print(f"No entities found. <{r.status_code}>")
             return None
@@ -251,26 +255,42 @@ class Server:
         # get patched entity and return it
         return self.get(E, id=id)
 
-    def post(self, entity: Entity) -> Entity:
+    def post(self, entity: Entity, strict: Optional[bool] = True) -> Entity:
         """Post an entity to the server
 
         Args:
             entity: entity instance
+            strict: don't allow double entry of entities (determined by name attr)
 
         Returns:
             Posted entity including assigned id
         """
 
         url = self._get_endpoint_url(entity)
-        res = requests.post(url, json=entity.dict(by_alias=True))
+        payload = entity.dict(by_alias=True)
+
+        # currently only checking for Things
+        if isinstance(entity, (Thing,)):
+            entities = self.get(entity.__class__)
+            if len(entities) > 0:
+                if any([e.name == entity.name for e in entities]):
+                    print(f"{entity.__class__.__name__} already exists!")
+                    print("Skipping...")
+                    return None
+                    # raise ValueError(f"{entity.__class__.__name__} already exists!")
+
+        # print("TODO: Fix this? id has to be deleted otherwise server complains...?")
+        if "id" in payload:
+            del payload["id"]
+        res = requests.post(url, json=payload)
 
         if res.status_code != 201:
-            print(f"Something went wrong in POST: {res.status_code}")
+            print(f"Something went wrong in POST: {res.status_code}: {res.text}")
             raise ValueError
         else:
             # retrieve id from frost server and update entity
             entity.id = self._get_id_from_url(res.headers["location"])
-            print(f"Success: POST {entity}")
+            # print(f"Success: POST {entity}")
 
         return entity
 
@@ -296,8 +316,8 @@ class Server:
         url = self._get_endpoint_url(E, id=id)
 
         # filter response for "cw_" entities, turn-off tag limit with tag_off=True
-        if hasattr(Server, "_tag") and not tag_off:
-            url += f"?$filter=startswith(name, '{self._tag}')"
+        # if hasattr(Server, "_tag") and not tag_off:
+        #    url += f"?$filter=startswith(name, '{self._tag}')"
 
         if search:
             if "$filter" in url:
@@ -341,22 +361,28 @@ class Server:
         if batch_mode:
             url = self.url + "/CreateObservations"
 
-            # push data at once with one big array
+            MAX_VALS = 200
+
             array = convert_df_to_jsonable_array(df)
+            chunks = [array[i : i + MAX_VALS] for i in range(0, len(array), MAX_VALS)]
 
-            payload = {
-                "components": ["phenomenonTime", "result"],
-                "dataArray@iot.count": len(array),
-                "dataArray": array,
-                "Datastream": {"@iot.id": datastream.id},
-            }
+            for chunk in chunks:
+                # push data at once with one big array
+                payload = [
+                    {
+                        "components": ["phenomenonTime", "result"],
+                        "dataArray@iot.count": len(chunk),
+                        "dataArray": chunk,
+                        "Datastream": {"@iot.id": datastream.id},
+                    }
+                ]
 
-            r = requests.post(url, json=payload)
+                res = requests.post(url, json=payload)
 
-            if r.status_code != 201:
-                raise requests.RequestException(
-                    f"DATA PUSH (batched) Observation request error {r.status_code}"
-                )
+                if res.status_code != 201:
+                    raise requests.RequestException(
+                        f"DATA PUSH (batched) Observation request error {res.status_code} : {res.text}"
+                    )
         else:
             url = self._get_endpoint_url(datastream) + "/Observations"
 
@@ -376,11 +402,11 @@ class Server:
                     timestamp.to_pydatetime(), DT_FORMAT
                 )
                 payload = {"phenomenonTime": dt_str, "result": str(row["result"])}
-                r = requests.post(url, json=payload)
+                res = requests.post(url, json=payload)
 
-                if r.status_code != 201:
+                if res.status_code != 201:
                     raise requests.RequestException(
-                        f"DATA PUSH Observation request error {r.status_code}"
+                        f"DATA PUSH Observation request error {res.status_code} :: {res.text}"
                     )
 
     def pull_data(
