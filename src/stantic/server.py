@@ -367,8 +367,8 @@ class Server:
                     url, dt=timestamp.to_pydatetime()
                 )
                 for id in existing_ids:
-                    r = requests.delete(f"{url}({id})")
-                    if r.status_code != 200:
+                    res = requests.delete(f"{url}({id})")
+                    if res.status_code != 200:  # pragma: no cover
                         raise requests.exceptions.RequestException(
                             "DELETE request not successful"
                         )
@@ -379,7 +379,7 @@ class Server:
                 payload = {"phenomenonTime": dt_str, "result": str(row["result"])}
                 res = requests.post(url, json=payload)
 
-                if res.status_code != 201:
+                if res.status_code != 201:  # pragma: no cover
                     raise requests.RequestException(
                         f"DATA PUSH Observation request error {res.status_code} :: {res.text}"
                     )
@@ -409,11 +409,11 @@ class Server:
         dt_min_str, dt_max_str = "", ""
         if dt_min:
             dt_min_str = (
-                f"phenomenonTime ge {datetime.datetime.strftime(dt_min, DT_FORMAT)}Z"
+                f"phenomenonTime ge {datetime.datetime.strftime(dt_min, DT_FORMAT)}"
             )
         if dt_max:
             dt_max_str = (
-                f"phenomenonTime le {datetime.datetime.strftime(dt_max, DT_FORMAT)}Z"
+                f"phenomenonTime le {datetime.datetime.strftime(dt_max, DT_FORMAT)}"
             )
 
         url = self._get_endpoint_url(datastream) + "/Observations"
