@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="stantic.server" href="stantic.server.html" /><link rel="prev" title="🧰 API reference" href="../api.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
         <title>stantic.models - Stantic 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -36,10 +36,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -178,7 +180,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -193,7 +196,7 @@
         </div>
         <article role="main">
           <div class="section" id="module-stantic.models">
-<span id="stantic-models"></span><h1>stantic.models<a class="headerlink" href="#module-stantic.models" title="Permalink to this headline">#</a></h1>
+<span id="stantic-models"></span><h1>stantic.models<a class="headerlink" href="#module-stantic.models" title="Permalink to this heading">#</a></h1>
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.Datastream">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">Datastream</span></span><a class="reference internal" href="../_modules/stantic/models.html#Datastream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.Datastream" title="Permalink to this definition">#</a></dt>
@@ -211,25 +214,31 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Datastream.ObservedProperty">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ObservedProperty</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Link</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.ObservedProperty" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ObservedProperty</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Link</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.ObservedProperty" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Datastream.Sensor">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sensor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Link</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.Sensor" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sensor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Link</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.Sensor" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Datastream.Thing">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Thing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Link</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.Thing" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Thing</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Link</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.Thing" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Datastream.observationType">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">observationType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.observationType" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Datastream.unitOfMeasurement">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unitOfMeasurement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.Unit" title="stantic.models.Unit"><span class="pre">stantic.models.Unit</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.unitOfMeasurement" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unitOfMeasurement</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.Unit" title="stantic.models.Unit"><span class="pre">Unit</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Datastream.unitOfMeasurement" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.Entity">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">Entity</span></span><a class="reference internal" href="../_modules/stantic/models.html#Entity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.Entity" title="Permalink to this definition">#</a></dt>
@@ -250,21 +259,26 @@
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Entity.description" title="Permalink to this definition">#</a></dt>
 <dd><p>Description of the entity (long-form).</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Entity.id">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#stantic.models.Entity.id" title="Permalink to this definition">#</a></dt>
 <dd><p>The id is issued by the FROST server once the entity is posted.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Entity.name">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Entity.name" title="Permalink to this definition">#</a></dt>
 <dd><p>Short and unique name of the entity.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Entity.properties">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Entity.properties" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#stantic.models.Entity.properties" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.Location">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">Location</span></span><a class="reference internal" href="../_modules/stantic/models.html#Location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.Location" title="Permalink to this definition">#</a></dt>
@@ -282,21 +296,26 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Location.Things">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Things</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">stantic.models.Link</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#stantic.models.Location.Things" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Things</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Link</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#stantic.models.Location.Things" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Location.encodingType">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encodingType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'application/geo+json'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'application/geo+json'</span></em><a class="headerlink" href="#stantic.models.Location.encodingType" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Location.location">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.LocationGeo" title="stantic.models.LocationGeo"><span class="pre">stantic.models.LocationGeo</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Location.location" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.LocationGeo" title="stantic.models.LocationGeo"><span class="pre">LocationGeo</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Location.location" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Location.properties">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.LocationProperty</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Location.properties" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">LocationProperty</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Location.properties" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.LocationGeo">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">LocationGeo</span></span><a class="reference internal" href="../_modules/stantic/models.html#LocationGeo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.LocationGeo" title="Permalink to this definition">#</a></dt>
@@ -315,11 +334,14 @@
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">coordinates</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.LocationGeo.coordinates" title="Permalink to this definition">#</a></dt>
 <dd><p>The geographic location (lon, lat).</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.LocationGeo.type">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'Point'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Point'</span></em><a class="headerlink" href="#stantic.models.LocationGeo.type" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.ObservedProperty">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">ObservedProperty</span></span><a class="reference internal" href="../_modules/stantic/models.html#ObservedProperty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.ObservedProperty" title="Permalink to this definition">#</a></dt>
@@ -337,11 +359,14 @@
 <dt class="sig sig-object py" id="stantic.models.ObservedProperty.definition">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">definition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ObservedProperty.definition" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ObservedProperty.properties">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Property</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ObservedProperty.properties" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Property</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ObservedProperty.properties" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.Sensor">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><a class="reference internal" href="../_modules/stantic/models.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.Sensor" title="Permalink to this definition">#</a></dt>
@@ -360,15 +385,19 @@
 <dt class="sig sig-object py" id="stantic.models.Sensor.encodingType">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encodingType</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Sensor.encodingType" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Sensor.metadata">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Sensor.metadata" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Sensor.properties">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.SensorProperty" title="stantic.models.SensorProperty"><span class="pre">stantic.models.SensorProperty</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Sensor.properties" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.SensorProperty" title="stantic.models.SensorProperty"><span class="pre">SensorProperty</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Sensor.properties" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.SensorProperty">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">SensorProperty</span></span><a class="reference internal" href="../_modules/stantic/models.html#SensorProperty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.SensorProperty" title="Permalink to this definition">#</a></dt>
@@ -388,17 +417,21 @@
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">offset</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.SensorProperty.offset" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove?</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.SensorProperty.pid">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.SensorProperty.pid" title="Permalink to this definition">#</a></dt>
 <dd><p>The device ID in the institutes registry.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.SensorProperty.sn">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.SensorProperty.sn" title="Permalink to this definition">#</a></dt>
 <dd><p>The serial number of the device (issued by the manufacturer).</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.Thing">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">Thing</span></span><a class="reference internal" href="../_modules/stantic/models.html#Thing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.Thing" title="Permalink to this definition">#</a></dt>
@@ -413,9 +446,11 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Thing.properties">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.ThingProperty" title="stantic.models.ThingProperty"><span class="pre">stantic.models.ThingProperty</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Thing.properties" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">properties</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#stantic.models.ThingProperty" title="stantic.models.ThingProperty"><span class="pre">ThingProperty</span></a></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Thing.properties" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">ThingProperty</span></span><a class="reference internal" href="../_modules/stantic/models.html#ThingProperty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.ThingProperty" title="Permalink to this definition">#</a></dt>
@@ -436,37 +471,45 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.data_person">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.data_person" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.data_person" title="Permalink to this definition">#</a></dt>
 <dd><p>The person handling the data acquisition and/ or processing.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.id">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.id" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.project">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">project</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.project" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.qaqc_person">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qaqc_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.qaqc_person" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">qaqc_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.qaqc_person" title="Permalink to this definition">#</a></dt>
 <dd><p>The person handling the data quality control.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.science_person">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">science_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.science_person" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">science_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.science_person" title="Permalink to this definition">#</a></dt>
 <dd><p>The person in charge of scientific questions (usually the PI).</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.station_id">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">station_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.station_id" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.ThingProperty.tech_person">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tech_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">stantic.models.Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.tech_person" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tech_person</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Person</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.ThingProperty.tech_person" title="Permalink to this definition">#</a></dt>
 <dd><p>The person responsible for technical maintenance.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class pydantic_model">
 <dt class="sig sig-object py" id="stantic.models.Unit">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stantic.models.</span></span><span class="sig-name descname"><span class="pre">Unit</span></span><a class="reference internal" href="../_modules/stantic/models.html#Unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stantic.models.Unit" title="Permalink to this definition">#</a></dt>
@@ -486,17 +529,21 @@
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">definition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Unit.definition" title="Permalink to this definition">#</a></dt>
 <dd><p>A proper definition if necessary.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Unit.name">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Unit.name" title="Permalink to this definition">#</a></dt>
 <dd><p>Name of the unit.</p>
 </dd></dl>
+
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="stantic.models.Unit.symbol">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#stantic.models.Unit.symbol" title="Permalink to this definition">#</a></dt>
 <dd><p>Scientific symbol.</p>
 </dd></dl>
+
 </dd></dl>
+
 </div>
 
         </article>
@@ -553,6 +600,7 @@
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>

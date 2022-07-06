@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
         <title>stantic.models - Stantic 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -36,10 +36,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -178,7 +180,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -199,21 +202,21 @@
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">EmailStr</span><span class="p">,</span> <span class="n">Field</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">"Property"</span><span class="p">,</span>
-    <span class="s2">"Person"</span><span class="p">,</span>
-    <span class="s2">"Entity"</span><span class="p">,</span>
-    <span class="s2">"ThingProperty"</span><span class="p">,</span>
-    <span class="s2">"LocationProperty"</span><span class="p">,</span>
-    <span class="s2">"LocationGeo"</span><span class="p">,</span>
-    <span class="s2">"Location"</span><span class="p">,</span>
-    <span class="s2">"ObservedProperty"</span><span class="p">,</span>
-    <span class="s2">"SensorProperty"</span><span class="p">,</span>
-    <span class="s2">"Sensor"</span><span class="p">,</span>
-    <span class="s2">"Thing"</span><span class="p">,</span>
-    <span class="s2">"Unit"</span><span class="p">,</span>
-    <span class="s2">"Link"</span><span class="p">,</span>
-    <span class="s2">"Datastream"</span><span class="p">,</span>
-    <span class="s2">"Observation"</span><span class="p">,</span>
+    <span class="s2">&quot;Property&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Person&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Entity&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ThingProperty&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LocationProperty&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;LocationGeo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ObservedProperty&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SensorProperty&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sensor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Thing&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Unit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Link&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Datastream&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Observation&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -222,7 +225,7 @@
 
 
 <span class="c1"># ----------</span>
-<span class="c1"># model that's not included</span>
+<span class="c1"># model that&#39;s not included</span>
 
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -232,7 +235,7 @@
 
 
 <span class="k">class</span> <span class="nc">Link</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">"@iot.id"</span><span class="p">)</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
         <span class="n">allow_population_by_field_name</span> <span class="o">=</span> <span class="kc">True</span>
@@ -240,50 +243,50 @@
 
 <span class="c1"># Thing --</span>
 <div class="viewcode-block" id="ThingProperty"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.ThingProperty">[docs]</a><span class="k">class</span> <span class="nc">ThingProperty</span><span class="p">(</span><span class="n">Property</span><span class="p">):</span>
-    <span class="sd">"""Thing properties"""</span>
+    <span class="sd">&quot;&quot;&quot;Thing properties&quot;&quot;&quot;</span>
 
     <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">project</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">station_id</span><span class="p">:</span> <span class="nb">str</span>
 
     <span class="n">tech_person</span><span class="p">:</span> <span class="n">Person</span>
-    <span class="sd">"""The person responsible for technical maintenance."""</span>
+    <span class="sd">&quot;&quot;&quot;The person responsible for technical maintenance.&quot;&quot;&quot;</span>
 
     <span class="n">science_person</span><span class="p">:</span> <span class="n">Person</span>
-    <span class="sd">"""The person in charge of scientific questions (usually the PI)."""</span>
+    <span class="sd">&quot;&quot;&quot;The person in charge of scientific questions (usually the PI).&quot;&quot;&quot;</span>
 
     <span class="n">data_person</span><span class="p">:</span> <span class="n">Person</span>
-    <span class="sd">"""The person handling the data acquisition and/ or processing."""</span>
+    <span class="sd">&quot;&quot;&quot;The person handling the data acquisition and/ or processing.&quot;&quot;&quot;</span>
 
     <span class="n">qaqc_person</span><span class="p">:</span> <span class="n">Person</span>
-    <span class="sd">"""The person handling the data quality control."""</span></div>
+    <span class="sd">&quot;&quot;&quot;The person handling the data quality control.&quot;&quot;&quot;</span></div>
 
 
 <span class="c1"># base model</span>
 <div class="viewcode-block" id="Entity"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Entity">[docs]</a><span class="k">class</span> <span class="nc">Entity</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="sd">"""STA base model"""</span>
+    <span class="sd">&quot;&quot;&quot;STA base model&quot;&quot;&quot;</span>
 
-    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Field(None, alias="@iot.id")</span>
-    <span class="sd">"""The id is issued by the FROST server once the entity is posted."""</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Field(None, alias=&quot;@iot.id&quot;)</span>
+    <span class="sd">&quot;&quot;&quot;The id is issued by the FROST server once the entity is posted.&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""Short and unique name of the entity."""</span>
+    <span class="sd">&quot;&quot;&quot;Short and unique name of the entity.&quot;&quot;&quot;</span>
 
     <span class="n">description</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""Description of the entity (long-form)."""</span>
+    <span class="sd">&quot;&quot;&quot;Description of the entity (long-form).&quot;&quot;&quot;</span>
 
     <span class="n">properties</span><span class="p">:</span> <span class="n">Any</span>
 
     <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"exclude"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}}</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;exclude&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}}</span>
         <span class="n">allow_population_by_alias</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">allow_population_by_field_name</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="Thing"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Thing">[docs]</a><span class="k">class</span> <span class="nc">Thing</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
-    <span class="sd">"""STA thing entity - a measurement tower or field station"""</span>
+    <span class="sd">&quot;&quot;&quot;STA thing entity - a measurement tower or field station&quot;&quot;&quot;</span>
 
-    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"Thing"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Thing"</span>
+    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Thing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Thing&quot;</span>
     <span class="n">properties</span><span class="p">:</span> <span class="n">ThingProperty</span></div>
 
 
@@ -293,50 +296,50 @@
 
 
 <div class="viewcode-block" id="LocationGeo"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.LocationGeo">[docs]</a><span class="k">class</span> <span class="nc">LocationGeo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="sd">"""Location coordinates"""</span>
+    <span class="sd">&quot;&quot;&quot;Location coordinates&quot;&quot;&quot;</span>
 
-    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"Point"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Point"</span>
-    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>  <span class="c1"># (lon. lat)</span>
-    <span class="sd">"""The geographic location (lon, lat)."""</span></div>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Point&quot;</span>
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>  <span class="c1"># (lon, lat)</span>
+    <span class="sd">&quot;&quot;&quot;The geographic location (lon, lat).&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Location"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Location">[docs]</a><span class="k">class</span> <span class="nc">Location</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
-    <span class="sd">"""STA location entity"""</span>
+    <span class="sd">&quot;&quot;&quot;STA location entity&quot;&quot;&quot;</span>
 
-    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"Location"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Location"</span>
+    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Location&quot;</span>
     <span class="n">properties</span><span class="p">:</span> <span class="n">LocationProperty</span>
-    <span class="n">encodingType</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"application/geo+json"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"application/geo+json"</span>
+    <span class="n">encodingType</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;application/geo+json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;application/geo+json&quot;</span>
     <span class="n">location</span><span class="p">:</span> <span class="n">LocationGeo</span>
     <span class="n">Things</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <span class="c1"># ObservedProperty --</span>
 <div class="viewcode-block" id="ObservedProperty"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.ObservedProperty">[docs]</a><span class="k">class</span> <span class="nc">ObservedProperty</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
-    <span class="sd">"""Observation properties"""</span>
+    <span class="sd">&quot;&quot;&quot;Observation properties&quot;&quot;&quot;</span>
 
-    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"ObservedProperty"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"ObservedProperty"</span>
+    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ObservedProperty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ObservedProperty&quot;</span>
     <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">properties</span><span class="p">:</span> <span class="n">Property</span></div>
 
 
 <span class="c1"># Sensor --</span>
 <div class="viewcode-block" id="SensorProperty"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.SensorProperty">[docs]</a><span class="k">class</span> <span class="nc">SensorProperty</span><span class="p">(</span><span class="n">Property</span><span class="p">):</span>
-    <span class="sd">"""Sensor properties"""</span>
+    <span class="sd">&quot;&quot;&quot;Sensor properties&quot;&quot;&quot;</span>
 
     <span class="n">pid</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""The device ID in the institutes registry."""</span>
+    <span class="sd">&quot;&quot;&quot;The device ID in the institutes registry.&quot;&quot;&quot;</span>
 
     <span class="n">sn</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""The serial number of the device (issued by the manufacturer)."""</span>
+    <span class="sd">&quot;&quot;&quot;The serial number of the device (issued by the manufacturer).&quot;&quot;&quot;</span>
 
     <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="sd">"""Remove?"""</span></div>
+    <span class="sd">&quot;&quot;&quot;Remove?&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
-    <span class="sd">"""STA sensor entity"""</span>
+    <span class="sd">&quot;&quot;&quot;STA sensor entity&quot;&quot;&quot;</span>
 
-    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"Sensor"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Sensor"</span>
+    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Sensor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Sensor&quot;</span>
     <span class="n">encodingType</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">properties</span><span class="p">:</span> <span class="n">SensorProperty</span></div>
@@ -344,20 +347,20 @@
 
 <span class="c1"># Datastream --</span>
 <div class="viewcode-block" id="Unit"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Unit">[docs]</a><span class="k">class</span> <span class="nc">Unit</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="sd">"""Scientific unit"""</span>
+    <span class="sd">&quot;&quot;&quot;Scientific unit&quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""Name of the unit."""</span>
+    <span class="sd">&quot;&quot;&quot;Name of the unit.&quot;&quot;&quot;</span>
 
     <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""Scientific symbol."""</span>
+    <span class="sd">&quot;&quot;&quot;Scientific symbol.&quot;&quot;&quot;</span>
 
     <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="sd">"""A proper definition if necessary."""</span></div>
+    <span class="sd">&quot;&quot;&quot;A proper definition if necessary.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Datastream"><a class="viewcode-back" href="../../_autosummary/stantic.models.html#stantic.models.Datastream">[docs]</a><span class="k">class</span> <span class="nc">Datastream</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
-    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"Datastream"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Datastream"</span>
+    <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Datastream&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Datastream&quot;</span>
     <span class="n">observationType</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">unitOfMeasurement</span><span class="p">:</span> <span class="n">Unit</span>
     <span class="n">Thing</span><span class="p">:</span> <span class="n">Link</span>
@@ -368,10 +371,10 @@
 <span class="c1"># Observation --</span>
 <span class="k">class</span> <span class="nc">Observation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">phenomenonTime</span><span class="p">:</span> <span class="n">datetime</span>
-    <span class="sd">"""Datetime of measurement reading."""</span>
+    <span class="sd">&quot;&quot;&quot;Datetime of measurement reading.&quot;&quot;&quot;</span>
 
     <span class="n">result</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="sd">"""Observed value."""</span>
+    <span class="sd">&quot;&quot;&quot;Observed value.&quot;&quot;&quot;</span>
 </pre></div>
         </article>
       </div>
@@ -409,6 +412,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>

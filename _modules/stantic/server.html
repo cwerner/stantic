@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
         <title>stantic.server - Stantic 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -36,10 +36,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -178,7 +180,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -203,70 +206,71 @@
 
 <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Datastream</span><span class="p">,</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Location</span><span class="p">,</span> <span class="n">ObservedProperty</span><span class="p">,</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Thing</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Server"</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Server&quot;</span><span class="p">]</span>
 
 <span class="c1"># type definitions</span>
 <span class="n">Url</span> <span class="o">=</span> <span class="nb">str</span>
 
-<span class="n">DT_FORMAT</span> <span class="o">=</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S%Z"</span>
+<span class="n">DT_FORMAT</span> <span class="o">=</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.000Z&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">expected_cols_and_dtypes</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="sd">"""check that the dataframe has an datetime index and excatly one col named result"""</span>
+    <span class="sd">&quot;&quot;&quot;check that the dataframe has an datetime index and exactly one col named result&quot;&quot;&quot;</span>
     <span class="n">i_type</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">inferred_type</span>
     <span class="n">c_names</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">((</span><span class="n">i_type</span> <span class="o">==</span> <span class="s2">"datetime64"</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">c_names</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"result"</span><span class="p">]))</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="p">((</span><span class="n">i_type</span> <span class="o">==</span> <span class="s2">&quot;datetime64&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">c_names</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]))</span> <span class="k">else</span> <span class="kc">False</span>
 
 
 <span class="k">def</span> <span class="nf">convert_df_to_jsonable_array</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-    <span class="sd">"""convert df two a list of lists (that contain datetime and result"""</span>
+    <span class="sd">&quot;&quot;&quot;convert df two a list of lists (that contain datetime and result&quot;&quot;&quot;</span>
     <span class="c1"># TODO: check if format string is valid</span>
     <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">(),</span> <span class="n">DT_FORMAT</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">result</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">result</span><span class="p">))</span>
 
 
 <span class="k">def</span> <span class="nf">check_if_observations_exist</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-    <span class="sd">"""check if observation(s) already exist for given datastream and time"""</span>
+    <span class="sd">&quot;&quot;&quot;check if observation(s) already exist for given datastream and time&quot;&quot;&quot;</span>
     <span class="n">offset</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt</span> <span class="o">-</span> <span class="n">offset</span><span class="p">,</span> <span class="n">DT_FORMAT</span><span class="p">)</span>
     <span class="n">t2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">DT_FORMAT</span><span class="p">)</span>
-
-    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">?$filter=phenomenonTime ge </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2">Z and phenomenonTime le </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2">Z &amp;$select=@iot.id"</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">?$filter=phenomenonTime ge </span><span class="si">{</span><span class="n">t1</span><span class="si">}</span><span class="s2"> and phenomenonTime le </span><span class="si">{</span><span class="n">t2</span><span class="si">}</span><span class="s2"> &amp;$select=@iot.id&quot;</span>
     <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;value&quot;</span> <span class="ow">in</span> <span class="n">result</span> <span class="k">else</span> <span class="p">[]</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">"value"</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">"value"</span> <span class="ow">in</span> <span class="n">result</span> <span class="k">else</span> <span class="p">[]</span>
 
-
-<span class="k">def</span> <span class="nf">get_endpoint_from_entity</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Entity</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">"""get endpoint from entity type"""</span>
+<span class="k">def</span> <span class="nf">get_endpoint_from_entity</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;get endpoint from entity type&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">Entity</span><span class="p">):</span>
         <span class="n">e_type</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>  <span class="c1"># instance passed</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
         <span class="n">e_type</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="vm">__name__</span>  <span class="c1"># Class/ Type passed</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">e_type</span> <span class="o">=</span> <span class="n">entity</span>  <span class="c1"># Entity name as string</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">if</span> <span class="n">e_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="s2">"Thing"</span><span class="p">,</span>
-        <span class="s2">"Sensor"</span><span class="p">,</span>
-        <span class="s2">"ObservedProperty"</span><span class="p">,</span>
-        <span class="s2">"Unit"</span><span class="p">,</span>
-        <span class="s2">"Datastream"</span><span class="p">,</span>
-        <span class="s2">"Location"</span><span class="p">,</span>
-        <span class="s2">"Observation"</span><span class="p">,</span>
+        <span class="s2">&quot;Thing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Sensor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ObservedProperty&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Unit&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Datastream&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Observation&quot;</span><span class="p">,</span>
     <span class="p">]:</span>
         <span class="c1"># only entities tested for now</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">e_type</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">ies"</span> <span class="k">if</span> <span class="n">e_type</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"y"</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">e_type</span><span class="si">}</span><span class="s2">s"</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e_type</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">ies&quot;</span> <span class="k">if</span> <span class="n">e_type</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e_type</span><span class="si">}</span><span class="s2">s&quot;</span>
 
 
 <div class="viewcode-block" id="Server"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server">[docs]</a><span class="k">class</span> <span class="nc">Server</span><span class="p">:</span>
-    <span class="sd">"""Server model of a FROST server instance"""</span>
+    <span class="sd">&quot;&quot;&quot;Server model of a FROST server instance&quot;&quot;&quot;</span>
 
-    <span class="n">_tag</span> <span class="o">=</span> <span class="s2">"cw_"</span>  <span class="c1"># filter all server entities by this name tag for now</span>
+    <span class="c1"># _tag = &quot;cw_&quot;  # filter all server entities by this name tag for now</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="n">Url</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="n">url</span>
@@ -279,120 +283,112 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Entity</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">]],</span> <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 
-        <span class="n">e_id</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">e_id</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span><span class="p">:</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="n">e_id</span>
 
         <span class="n">endpoint</span> <span class="o">=</span> <span class="n">get_endpoint_from_entity</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">)"</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="k">def</span> <span class="nf">_get_id_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
-            <span class="sa">r</span><span class="s2">"\((.*?)\)"</span><span class="p">,</span> <span class="n">url</span>
+            <span class="sa">r</span><span class="s2">&quot;\((.*?)\)&quot;</span><span class="p">,</span> <span class="n">url</span>
         <span class="p">)</span>  <span class="c1"># Search for all brackets (and store their content)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Could not extract thing_id from header"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not extract thing_id from header&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">id</span>
 
     <span class="k">def</span> <span class="nf">_extract_ids_from_navlinks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">"""messy!"""</span>
-
-        <span class="k">if</span> <span class="s2">"value"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"value"</span><span class="p">]:</span>
-                <span class="n">links</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">d</span> <span class="k">if</span> <span class="s2">"@iot.navigationLink"</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ObservedProperty</span><span class="p">,</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Thing</span><span class="p">]:</span>
-                        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">link</span><span class="p">:</span>
-                            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="n">d</span><span class="p">[</span><span class="n">link</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"FROST-Server/v1.1"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-                            <span class="n">_j</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-                            <span class="k">if</span> <span class="s2">"value"</span> <span class="ow">in</span> <span class="n">_j</span><span class="p">:</span>
-                                <span class="n">d</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                                    <span class="p">{</span><span class="s2">"@iot.id"</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">]}</span>
-                                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"value"</span><span class="p">]</span>
-                                <span class="p">]</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">d</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"@iot.id"</span><span class="p">:</span> <span class="n">_j</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">]}</span>
-                            <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">links</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="s2">"@iot.navigationLink"</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="k">def</span> <span class="nf">extract_ids</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="n">links</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="s2">&quot;@iot.navigationLink&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ObservedProperty</span><span class="p">,</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Thing</span><span class="p">]:</span>
                     <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="n">link</span><span class="p">:</span>
-                        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">link</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"FROST-Server/v1.1"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="n">link</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;FROST-Server/v1.1&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
                         <span class="n">_j</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="s2">"value"</span> <span class="ow">in</span> <span class="n">_j</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s2">&quot;value&quot;</span> <span class="ow">in</span> <span class="n">_j</span><span class="p">:</span>
                             <span class="n">data</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                                <span class="p">{</span><span class="s2">"@iot.id"</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">]}</span>
-                                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"value"</span><span class="p">]</span>
+                                <span class="p">{</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">]}</span>
+                                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
                             <span class="p">]</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">data</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"@iot.id"</span><span class="p">:</span> <span class="n">_j</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">]}</span>
+                            <span class="n">data</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">:</span> <span class="n">_j</span><span class="p">[</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">]}</span>
                         <span class="k">continue</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="p">[</span><span class="n">extract_ids</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]]</span> <span class="k">if</span> <span class="s2">&quot;value&quot;</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">else</span> <span class="n">extract_ids</span><span class="p">(</span>
+            <span class="n">data</span>
+        <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">data</span>
 
-    <span class="c1"># TODO: make 'id' and 'search' mutually exclusive !!!</span>
+    <span class="c1"># TODO: make &#39;id&#39; and &#39;search&#39; mutually exclusive !!!</span>
 <div class="viewcode-block" id="Server.get"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">E</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">],</span>
         <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">search</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">tag_off</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Entity</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Entity</span><span class="p">]]]:</span>
-        <span class="sd">"""Get all or specified entity from server</span>
+        <span class="sd">&quot;&quot;&quot;Get all or specified entity from server</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            E: entity type to get</span>
 <span class="sd">            id: entity id</span>
 <span class="sd">            search: filter entitites by this search string</span>
-<span class="sd">            tag_off: (will be removed later)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Entity or list of requested entities</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
-        <span class="c1"># filter response for "cw_" entities, turn-off tag limit with tag_off=True</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Server</span><span class="p">,</span> <span class="s2">"_tag"</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">tag_off</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"?$filter=startswith(name, '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_tag</span><span class="si">}</span><span class="s2">')"</span>
+        <span class="c1"># filter response for &quot;cw_&quot; entities, turn-off tag limit with tag_off=True</span>
+        <span class="c1"># if hasattr(Server, &quot;_tag&quot;) and not tag_off:</span>
+        <span class="c1">#    url += f&quot;?$filter=startswith(name, &#39;{self._tag}&#39;)&quot;</span>
 
         <span class="k">if</span> <span class="n">search</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">"$filter"</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
-                <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">" and substringof(name, '</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s2">')"</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"$filter=substringof('</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s2">', name)"</span>
+            <span class="c1"># if &quot;$filter&quot; in url:</span>
+            <span class="c1">#     url += f&quot; and substringof(name, &#39;{search}&#39;)&quot;</span>
+            <span class="c1"># else:</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;?$filter=substringof(&#39;</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s2">&#39;, name)&quot;</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_ids_from_navlinks</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_ids_from_navlinks</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 
             <span class="k">if</span> <span class="nb">id</span><span class="p">:</span>
                 <span class="n">obj</span> <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-                <span class="k">if</span> <span class="s2">"@iot.id"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">])</span>
+                <span class="k">if</span> <span class="s2">&quot;@iot.id&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">])</span>
                 <span class="k">return</span> <span class="n">obj</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">objs</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"value"</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
                     <span class="n">obj</span> <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="s2">"@iot.id"</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
-                        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"@iot.id"</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="s2">&quot;@iot.id&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">])</span>
                     <span class="n">objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">search</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No entries found.&quot;</span><span class="p">)</span>
+
                 <span class="k">return</span> <span class="n">objs</span>
-        <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No entities found. &lt;</span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&gt;"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Raised status code </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+        <span class="k">elif</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Requested id not found. &lt;</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&gt;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raised status code </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Server.update"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Update/ patch an entity on the server</span>
+        <span class="sd">&quot;&quot;&quot;Update/ patch an entity on the server</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            entity: the updated entity to be pushed to the server</span>
@@ -400,23 +396,23 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Nothing</span>
 
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">id</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">id</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">id</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Entity </span><span class="si">{</span><span class="n">entity</span><span class="si">}</span><span class="s2"> has no id and cannot not be updated"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entity </span><span class="si">{</span><span class="n">entity</span><span class="si">}</span><span class="s2"> has no id and cannot not be updated&quot;</span><span class="p">)</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
-        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"content-type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">}</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">dict</span><span class="p">()),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Update not successful. Return status </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Update not successful. Return status </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Server.update_field"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.update_field">[docs]</a>    <span class="k">def</span> <span class="nf">update_field</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">],</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Entity</span><span class="p">]]:</span>
-        <span class="sd">"""Update specific fields of an entity on the server</span>
+        <span class="sd">&quot;&quot;&quot;Update specific fields of an entity on the server</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            E: entity type to update</span>
@@ -425,87 +421,93 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Entity or list of requested entities</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">payload_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">payload_fields</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">__fields__</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Provided payload does not match entity </span><span class="si">{</span><span class="n">E</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provided payload does not match entity </span><span class="si">{</span><span class="n">E</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
-        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"content-type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">}</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">),</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Update not successful. Return status </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Update not successful. Return status </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># get patched entity and return it</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Server.post"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Entity</span><span class="p">:</span>
-        <span class="sd">"""Post an entity to the server</span>
+<div class="viewcode-block" id="Server.post"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.post">[docs]</a>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Entity</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Post an entity to the server</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            entity: entity instance</span>
+<span class="sd">            strict: don&#39;t allow double entry of entities (determined by name attr)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Posted entity including assigned id</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">entity</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">entity</span><span class="o">.</span><span class="n">dict</span><span class="p">(</span><span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Something went wrong in POST: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span>
+        <span class="c1"># currently only checking for Things</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="p">(</span><span class="n">Thing</span><span class="p">,))</span> <span class="ow">and</span> <span class="n">strict</span><span class="p">:</span>
+            <span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">entity</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">entities</span><span class="p">]):</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> already exists!&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping...&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> already exists!&quot;</span><span class="p">)</span>
+
+        <span class="c1"># print(&quot;TODO: Fix this? id has to be deleted otherwise server complains...?&quot;)</span>
+        <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">payload</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Something went wrong in POST: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># retrieve id from frost server and update entity</span>
-            <span class="n">entity</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_id_from_url</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">"location"</span><span class="p">])</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Success: POST </span><span class="si">{</span><span class="n">entity</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">entity</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_id_from_url</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">entity</span></div>
 
 <div class="viewcode-block" id="Server.delete"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">E</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">],</span>
-        <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">search</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">tag_off</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">E</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">],</span> <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">search</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Delete all or specified entity from server</span>
+        <span class="sd">&quot;&quot;&quot;Delete all or specified entity from server</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            E: entity type to delete</span>
 <span class="sd">            id: entity id</span>
 <span class="sd">            search: filter entitites by this search string</span>
-<span class="sd">            tag_off: (will be removed later)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Nothing</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
 
-        <span class="c1"># filter response for "cw_" entities, turn-off tag limit with tag_off=True</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">Server</span><span class="p">,</span> <span class="s2">"_tag"</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">tag_off</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"?$filter=startswith(name, '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_tag</span><span class="si">}</span><span class="s2">')"</span>
+        <span class="c1"># filter response for &quot;cw_&quot; entities, turn-off tag limit with tag_off=True</span>
+        <span class="c1"># if hasattr(Server, &quot;_tag&quot;) and not tag_off:</span>
+        <span class="c1">#    url += f&quot;?$filter=startswith(name, &#39;{self._tag}&#39;)&quot;</span>
 
         <span class="k">if</span> <span class="n">search</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s2">"$filter"</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
-                <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">" and substringof(name, '</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s2">')"</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"$filter=substringof('</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s2">', name)"</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;$filter=substringof(&#39;</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s2">&#39;, name)&quot;</span>
 
         <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Delete not successful. Return status </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Delete not successful. Return status </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># check that all entities are gone</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">"Something went wrong. There are still </span><span class="si">{E}</span><span class="s2"> left after delete!"</span>
+                    <span class="sa">f</span><span class="s2">&quot;Something went wrong. There are still </span><span class="si">{</span><span class="n">E</span><span class="si">}</span><span class="s2"> left after delete!&quot;</span>
                 <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Server.push_data"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.push_data">[docs]</a>    <span class="k">def</span> <span class="nf">push_data</span><span class="p">(</span>
@@ -514,7 +516,7 @@
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">batch_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">"""Push data to datastream</span>
+        <span class="sd">&quot;&quot;&quot;Push data to datastream</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            datastream: target datastream</span>
@@ -523,33 +525,39 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Nothing</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># validate data dataframe</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">expected_cols_and_dtypes</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Dataframe is not compatible"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dataframe is not compatible&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">batch_mode</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">"/CreateObservations"</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;/CreateObservations&quot;</span>
 
-            <span class="c1"># push data at once with one big array</span>
+            <span class="n">MAX_VALS</span> <span class="o">=</span> <span class="mi">200</span>
+
             <span class="n">array</span> <span class="o">=</span> <span class="n">convert_df_to_jsonable_array</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">array</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">MAX_VALS</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">),</span> <span class="n">MAX_VALS</span><span class="p">)]</span>
 
-            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">"components"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"phenomenonTime"</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">],</span>
-                <span class="s2">"dataArray@iot.count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">array</span><span class="p">),</span>
-                <span class="s2">"dataArray"</span><span class="p">:</span> <span class="n">array</span><span class="p">,</span>
-                <span class="s2">"Datastream"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"@iot.id"</span><span class="p">:</span> <span class="n">datastream</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
-            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+                <span class="c1"># push data at once with one big array</span>
+                <span class="n">payload</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;components&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;phenomenonTime&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;dataArray@iot.count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">),</span>
+                        <span class="s2">&quot;dataArray&quot;</span><span class="p">:</span> <span class="n">chunk</span><span class="p">,</span>
+                        <span class="s2">&quot;Datastream&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;@iot.id&quot;</span><span class="p">:</span> <span class="n">datastream</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
 
-            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"DATA PUSH (batched) Observation request error </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span>
-                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;DATA PUSH (batched) Observation request error </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">datastream</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"/Observations"</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">datastream</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/Observations&quot;</span>
 
             <span class="k">for</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
                 <span class="c1"># check if data already exist and delete the entry/ entries</span>
@@ -557,21 +565,21 @@
                     <span class="n">url</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">timestamp</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">()</span>
                 <span class="p">)</span>
                 <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">existing_ids</span><span class="p">:</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="nb">id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                         <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
-                            <span class="s2">"DELETE request not successful"</span>
+                            <span class="s2">&quot;DELETE request not successful&quot;</span>
                         <span class="p">)</span>
 
                 <span class="n">dt_str</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
                     <span class="n">timestamp</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">(),</span> <span class="n">DT_FORMAT</span>
                 <span class="p">)</span>
-                <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"phenomenonTime"</span><span class="p">:</span> <span class="n">dt_str</span><span class="p">,</span> <span class="s2">"result"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"result"</span><span class="p">])}</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+                <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;phenomenonTime&quot;</span><span class="p">:</span> <span class="n">dt_str</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">])}</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">201</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                     <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">"DATA PUSH Observation request error </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="sa">f</span><span class="s2">&quot;DATA PUSH Observation request error </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> :: </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Server.pull_data"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.pull_data">[docs]</a>    <span class="k">def</span> <span class="nf">pull_data</span><span class="p">(</span>
@@ -581,7 +589,7 @@
         <span class="n">dt_min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dt_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">"""Pull data from datastream</span>
+        <span class="sd">&quot;&quot;&quot;Pull data from datastream</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            datastream: source datastream</span>
@@ -590,61 +598,61 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dataframe with observation values</span>
-<span class="sd">        """</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">dt_min</span> <span class="ow">and</span> <span class="n">dt_max</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">dt_min</span> <span class="o">&gt;</span> <span class="n">dt_max</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"datetime dt_min must be prior to dt_max"</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;datetime dt_min must be prior to dt_max&quot;</span><span class="p">)</span>
 
-        <span class="n">dt_min_str</span><span class="p">,</span> <span class="n">dt_max_str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="s2">""</span>
+        <span class="n">dt_min_str</span><span class="p">,</span> <span class="n">dt_max_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
         <span class="k">if</span> <span class="n">dt_min</span><span class="p">:</span>
             <span class="n">dt_min_str</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"phenomenonTime ge </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_min</span><span class="p">,</span> <span class="n">DT_FORMAT</span><span class="p">)</span><span class="si">}</span><span class="s2">Z"</span>
+                <span class="sa">f</span><span class="s2">&quot;phenomenonTime ge </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_min</span><span class="p">,</span> <span class="n">DT_FORMAT</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">dt_max</span><span class="p">:</span>
             <span class="n">dt_max_str</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"phenomenonTime le </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_max</span><span class="p">,</span> <span class="n">DT_FORMAT</span><span class="p">)</span><span class="si">}</span><span class="s2">Z"</span>
+                <span class="sa">f</span><span class="s2">&quot;phenomenonTime le </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">dt_max</span><span class="p">,</span> <span class="n">DT_FORMAT</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">datastream</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"/Observations"</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_endpoint_url</span><span class="p">(</span><span class="n">datastream</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/Observations&quot;</span>
 
         <span class="k">if</span> <span class="n">dt_min_str</span> <span class="ow">and</span> <span class="n">dt_max_str</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"?$filter=</span><span class="si">{</span><span class="n">dt_min_str</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">dt_max_str</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;?$filter=</span><span class="si">{</span><span class="n">dt_min_str</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">dt_max_str</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">elif</span> <span class="n">dt_min_str</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"?$filter=</span><span class="si">{</span><span class="n">dt_min_str</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;?$filter=</span><span class="si">{</span><span class="n">dt_min_str</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">elif</span> <span class="n">dt_max_str</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"?$filter=</span><span class="si">{</span><span class="n">dt_max_str</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;?$filter=</span><span class="si">{</span><span class="n">dt_max_str</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"DATA PULL Observation request error </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span>
+                <span class="sa">f</span><span class="s2">&quot;DATA PULL Observation request error </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">"value"</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
         <span class="n">dts</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">"phenomenonTime"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"+00:00"</span><span class="p">))</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;phenomenonTime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;+00:00&quot;</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span>
         <span class="p">]</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">"result"</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"result"</span><span class="p">:</span> <span class="n">results</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">dts</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">dts</span><span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Server.dump"><a class="viewcode-back" href="../../_autosummary/stantic.server.html#stantic.server.Server.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">]]]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Entity</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Entity</span><span class="p">]]:</span>
-        <span class="sd">"""Get all instances of requested entity type</span>
+        <span class="sd">&quot;&quot;&quot;Get all instances of requested entity type</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            entity: entity type or list of entity types</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict with entities</span>
-<span class="sd">        """</span>
-        <span class="sd">"""return all data for given entity types"""</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;return all data for given entity types&quot;&quot;&quot;</span>
         <span class="n">entities</span> <span class="o">=</span> <span class="n">entity</span> <span class="ow">or</span> <span class="p">[</span><span class="n">Sensor</span><span class="p">,</span> <span class="n">Thing</span><span class="p">,</span> <span class="n">Location</span><span class="p">,</span> <span class="n">Datastream</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">entities</span> <span class="o">=</span> <span class="p">[</span><span class="n">entities</span><span class="p">]</span>
@@ -662,15 +670,15 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_alive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""Check if the server can be reached"""</span>
+        <span class="sd">&quot;&quot;&quot;Check if the server can be reached&quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
             <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>  <span class="c1"># Raises a HTTPError if the status is 4xx, 5xxx</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">,</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"FROST server down?"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FROST server down?&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"FROST server repsonds with HTTPError </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FROST server repsonds with HTTPError </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
@@ -711,6 +719,7 @@
 </div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
