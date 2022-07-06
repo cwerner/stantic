@@ -5,8 +5,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from pydantic import EmailStr
 
-from stantic import Server
 from stantic.models import *
+from stantic.server import Server
 from stantic.tools import pretty_print
 
 load_dotenv()

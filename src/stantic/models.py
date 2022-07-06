@@ -101,7 +101,7 @@ class LocationGeo(BaseModel):
     """Location coordinates"""
 
     type: Literal["Point"] = "Point"
-    coordinates: Tuple[float, float]  # (lon. lat)
+    coordinates: Tuple[float, float]  # (lon, lat)
     """The geographic location (lon, lat)."""
 
 

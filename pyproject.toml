@@ -24,9 +24,13 @@ multi_line_output = 3
 include_trailing_comma = true
 
 
+[tool.coverage.run]
+source = ['stantic']
+
+
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q -s -vv --log-cli-level=INFO --no-header"
+addopts = "--cov --cov-report term-missing -ra -q -s -vv --log-cli-level=INFO --no-header"
 testpaths = [
     "tests",
 ]
