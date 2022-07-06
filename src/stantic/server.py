@@ -427,14 +427,14 @@ class Server:
         else:
             pass
 
-        r = requests.get(url)
+        res = requests.get(url)
         print(url)
-        if r.status_code != 200:
+        if res.status_code != 200:
             raise requests.RequestException(
-                f"DATA PULL Observation request error {r.status_code}"
+                f"DATA PULL Observation request error {res.status_code}"
             )
 
-        data = r.json()["value"]
+        data = res.json()["value"]
         dts = [
             datetime.datetime.fromisoformat(x["phenomenonTime"].replace("Z", "+00:00"))
             for x in data
