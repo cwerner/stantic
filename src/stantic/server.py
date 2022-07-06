@@ -267,7 +267,7 @@ class Server:
             del payload["id"]
         res = requests.post(url, json=payload)
 
-        if res.status_code != 201:
+        if res.status_code != 201:  # pragma: no cover
             raise ValueError(
                 f"Something went wrong in POST: {res.status_code}: {res.text}"
             )
@@ -278,11 +278,7 @@ class Server:
         return entity
 
     def delete(
-        self,
-        E: Type[Entity],
-        id: Optional[int] = None,
-        search: Optional[str] = None,
-        tag_off: Optional[bool] = False,
+        self, E: Type[Entity], id: Optional[int] = None, search: Optional[str] = None
     ) -> None:
         """Delete all or specified entity from server
 
@@ -290,7 +286,6 @@ class Server:
             E: entity type to delete
             id: entity id
             search: filter entitites by this search string
-            tag_off: (will be removed later)
 
         Returns:
             Nothing
@@ -303,10 +298,7 @@ class Server:
         #    url += f"?$filter=startswith(name, '{self._tag}')"
 
         if search:
-            if "$filter" in url:
-                url += f" and substringof(name, '{search}')"
-            else:
-                url += f"$filter=substringof('{search}', name)"
+            url += f"$filter=substringof('{search}', name)"
 
         res = requests.delete(url)
 
@@ -315,9 +307,9 @@ class Server:
         else:
             # check that all entities are gone
             result = self.get(E, id=id)
-            if result is not None:
+            if len(result) != 0:
                 raise ValueError(
-                    "Something went wrong. There are still {E} left after delete!"
+                    f"Something went wrong. There are still {E} left after delete!"
                 )
 
     def push_data(
