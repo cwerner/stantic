@@ -56,3 +56,16 @@ def test_server_post_thing_strict_off(server_with_data: Server, thing: Thing):
 def test_server_post_thing_strict_on(server_with_data: Server, thing: Thing):
     with pytest.raises(ValueError):
         thing = server_with_data.post(thing, strict=True)
+
+
+def test_server_delete_thing(server_with_data: Server):
+    thing = server_with_data.get(Thing, search="random")
+    server_with_data.delete(Thing, id=thing[0].id)
+
+
+@pytest.mark.skip("This fails with a 'POST only allowed for Collections' 400 error?")
+def test_server_delete_things_with_search(server_with_data: Server, thing: Thing):
+    server_with_data.post(thing, strict=False)
+    server_with_data.post(thing, strict=False)
+    server_with_data.post(thing, strict=False)
+    server_with_data.delete(Thing, search="random")
