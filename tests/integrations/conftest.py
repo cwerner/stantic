@@ -1,3 +1,6 @@
+import importlib.resources
+import shutil
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -22,8 +25,9 @@ from stantic.models import (
     Unit,
 )
 from stantic.server import Server
+from stantic.tools import load_data
 
-COMPOSE_PATH = "."  # the folder containing docker-compose.yml
+COMPOSE_PATH = Path(__file__).parent
 
 
 # TODO : Check where we store our single source of truth for units.
@@ -214,37 +218,6 @@ def setup_system(server: Server) -> None:
     setup_datastreams(server)
 
 
-def load_data(site: str) -> pd.DataFrame:
-
-    data_src = Path("tests/integrations/data")
-
-    # read header info
-    colnames = open(data_src / f"{site}_M_header.csv", "r").readline()[:-1].split(",")
-    colnames = [
-        cname.lower().replace(" ", "_").replace("(", "").replace(")", "")
-        for cname in colnames
-    ]
-
-    var_subset = ["airtemp_avg", "ramount"]
-
-    files = data_src.glob(f"{site}_*.dat.gz")
-    files = sorted(files)
-
-    dfs = []
-    for file in files:
-        df = pd.read_csv(
-            file,
-            names=colnames,
-            header=None,
-            na_values="NAN",
-            parse_dates=["timestamp"],
-        )
-        df = df.set_index("timestamp")
-        dfs.append(df)
-    df = pd.concat(dfs)
-    return df.loc[:, var_subset]
-
-
 @pytest.fixture(scope="session")
 def server():
     frost = DockerCompose(
@@ -289,9 +262,17 @@ def server_with_schema(server: Server):
 
 
 @pytest.fixture(scope="session")
-def server_with_data(server_with_schema: Server):
-    fendt_data = load_data("Fen")
-    graswang_data = load_data("Gra")
+def sample_data():
+    with tempfile.TemporaryDirectory() as tmpdir:
+        src = Path(__file__).parent / "data"
+        shutil.copytree(str(src), tmpdir, dirs_exist_ok=True)
+        yield Path(tmpdir)
+
+
+@pytest.fixture(scope="session")
+def server_with_data(server_with_schema: Server, sample_data: Path):
+    fendt_data = load_data("Fen", data_src=sample_data)
+    graswang_data = load_data("Gra", data_src=sample_data)
 
     # dump = server_with_schema.dump(Datastream)
     # print(f"DUMP: {dump}")
