@@ -213,7 +213,7 @@ def setup_system(server: Server) -> None:
         )
         location = server.post(location)
 
-        del station
+        # del station
 
     setup_datastreams(server)
 

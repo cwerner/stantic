@@ -6,7 +6,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 import pandas as pd
 import requests
 
-from .models import Datastream, Entity, Location, ObservedProperty, Sensor, Thing
+from .models import Datastream, Entity, Link, Location, ObservedProperty, Sensor, Thing
 
 __all__ = ["Server"]
 
@@ -106,7 +106,7 @@ class Server:
         def extract_ids(data):
             links = [x for x in data if "@iot.navigationLink" in x]
             for link in links:
-                for e in [ObservedProperty, Sensor, Thing]:
+                for e in [Datastream, Location, ObservedProperty, Sensor, Thing]:
                     if e.__name__ in link:
                         url = self.url + data[link].split("FROST-Server/v1.1")[-1]
 
@@ -162,8 +162,25 @@ class Server:
         if res.status_code == 200:
             data = self._extract_ids_from_navlinks(res.json())
 
+            def add_links(obj, data):
+                # HACK!!!
+                # TODO: solve this in a more generic way
+                if "Datastream" in data:
+                    obj.Datastreams = [
+                        Link(id=int(d["@iot.id"])) for d in data["Datastream"]
+                    ]
+
+                # TODO: resolve this nameing conflict with clearer model definition
+                if "Location" in data and isinstance(obj, Location) is False:
+                    obj.Locations = [
+                        Link(id=int(d["@iot.id"])) for d in data["Location"]
+                    ]
+                return obj
+
             if id:
                 obj = E.parse_obj(data)
+                obj = add_links(obj, data)
+
                 if "@iot.id" in data:
                     obj.id = int(data["@iot.id"])
                 return obj
@@ -171,6 +188,8 @@ class Server:
                 objs = []
                 for d in data["value"]:
                     obj = E.parse_obj(d)
+                    obj = add_links(obj, d)
+
                     if "@iot.id" in d:
                         obj.id = int(d["@iot.id"])
                     objs.append(obj)

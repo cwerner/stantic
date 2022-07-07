@@ -91,6 +91,9 @@ class Thing(Entity):
     _tag: Literal["Thing"] = "Thing"
     properties: ThingProperty
 
+    Datastreams: Optional[List[Link]] = []
+    Locations: Optional[List[Link]] = []
+
 
 # Location --
 class LocationProperty(BaseModel):
@@ -112,7 +115,8 @@ class Location(Entity):
     properties: LocationProperty
     encodingType: Literal["application/geo+json"] = "application/geo+json"
     location: LocationGeo
-    Things: Optional[List[Link]] = None
+
+    Things: Optional[List[Link]] = []
 
 
 # ObservedProperty --
@@ -122,6 +126,8 @@ class ObservedProperty(Entity):
     _tag: Literal["ObservedProperty"] = "ObservedProperty"
     definition: str
     properties: Property
+
+    Datastreams: Optional[List[Link]] = []
 
 
 # Sensor --
@@ -145,6 +151,8 @@ class Sensor(Entity):
     encodingType: str
     metadata: str
     properties: SensorProperty
+
+    Datastreams: Optional[List[Link]] = []
 
 
 # Datastream --
