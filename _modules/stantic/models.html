@@ -287,7 +287,10 @@
     <span class="sd">&quot;&quot;&quot;STA thing entity - a measurement tower or field station&quot;&quot;&quot;</span>
 
     <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Thing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Thing&quot;</span>
-    <span class="n">properties</span><span class="p">:</span> <span class="n">ThingProperty</span></div>
+    <span class="n">properties</span><span class="p">:</span> <span class="n">ThingProperty</span>
+
+    <span class="n">Datastreams</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Locations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <span class="c1"># Location --</span>
@@ -310,7 +313,8 @@
     <span class="n">properties</span><span class="p">:</span> <span class="n">LocationProperty</span>
     <span class="n">encodingType</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;application/geo+json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;application/geo+json&quot;</span>
     <span class="n">location</span><span class="p">:</span> <span class="n">LocationGeo</span>
-    <span class="n">Things</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="n">Things</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <span class="c1"># ObservedProperty --</span>
@@ -319,7 +323,9 @@
 
     <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ObservedProperty&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ObservedProperty&quot;</span>
     <span class="n">definition</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">properties</span><span class="p">:</span> <span class="n">Property</span></div>
+    <span class="n">properties</span><span class="p">:</span> <span class="n">Property</span>
+
+    <span class="n">Datastreams</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <span class="c1"># Sensor --</span>
@@ -342,7 +348,9 @@
     <span class="n">_tag</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;Sensor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Sensor&quot;</span>
     <span class="n">encodingType</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">metadata</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">properties</span><span class="p">:</span> <span class="n">SensorProperty</span></div>
+    <span class="n">properties</span><span class="p">:</span> <span class="n">SensorProperty</span>
+
+    <span class="n">Datastreams</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Link</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <span class="c1"># Datastream --</span>
