@@ -15,7 +15,7 @@ __all__ = ["Server"]
 Url = str
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
-MAX_REQUESTS = 100  # maximum data requests in pull_data (of 100 values each)
+MAX_REQUESTS = 1000  # maximum data requests in pull_data (of 100 values each)
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
