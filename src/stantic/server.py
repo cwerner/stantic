@@ -1,5 +1,6 @@
 import datetime
 import json
+import math
 import re
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
@@ -14,6 +15,7 @@ __all__ = ["Server"]
 Url = str
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
+MAX_REQUESTS = 1000  # maximum data requests in pull_data (of 100 values each)
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
@@ -409,6 +411,7 @@ class Server:
         *,
         dt_min: Optional[datetime.datetime] = None,
         dt_max: Optional[datetime.datetime] = None,
+        max_requests: Optional[int] = None,
     ) -> pd.DataFrame:
         """Pull data from datastream
 
@@ -416,6 +419,7 @@ class Server:
             datastream: source datastream
             dt_min: start datetime
             dt_max: end datetime
+            max_requests: max request calls allowed (overwrites default of 100)
 
         Returns:
             Dataframe with observation values
@@ -446,21 +450,60 @@ class Server:
         else:
             pass
 
+        if "?" in url:
+            url += "&$select=result,phenomenonTime&$resultFormat=DataArray&$count=true"
+        else:
+            url += "?$select=result,phenomenonTime&$resultFormat=DataArray&$count=true"
+
+        def extract_data_from_json(json_data):
+            data = res.json()["value"][0]["dataArray"]
+            cols = res.json()["value"][0]["components"]
+            df_raw = pd.DataFrame(data, columns=cols)
+            df_raw["phenomenonTime"] = df_raw.phenomenonTime.apply(
+                lambda x: datetime.datetime.fromisoformat(x.replace("Z", "+00:00"))
+            )
+            df = df_raw.set_index("phenomenonTime")
+            return df
+
+        dfs = []
+
         res = requests.get(url)
-        print(url)
         if res.status_code != 200:
             raise requests.RequestException(
                 f"DATA PULL Observation request error {res.status_code}"
             )
 
-        data = res.json()["value"]
-        dts = [
-            datetime.datetime.fromisoformat(x["phenomenonTime"].replace("Z", "+00:00"))
-            for x in data
-        ]
-        results = [float(x["result"]) for x in data]
+        total_requests = math.ceil(int(res.json()["@iot.count"]) / 100.0)
 
-        return pd.DataFrame({"result": results}, index=dts).sort_index()
+        max_requests = max_requests or MAX_REQUESTS
+
+        if total_requests > MAX_REQUESTS:
+            print(
+                f"WARNING! Total request calls will exceed MAX_REQUESTS ({max_requests}). Data will be truncated..."
+            )
+
+        df = extract_data_from_json(res.json())
+        dfs.append(df)
+
+        cnt = 0
+        while "@iot.nextLink" in res.json():
+            if cnt > max_requests:
+                print("MAX_REQUESTS reached! Aborting...")
+                break
+
+            url = res.json()["@iot.nextLink"]
+            res = requests.get(url)
+
+            if res.status_code != 200:
+                raise requests.RequestException(
+                    f"DATA PULL Observation request error {res.status_code}"
+                )
+            df = extract_data_from_json(res.json())
+            dfs.append(df)
+            cnt += 1
+
+        df = pd.concat(dfs)
+        return df.sort_index()
 
     def dump(
         self, entity: Optional[Union[Type[Entity], Iterable[Type[Entity]]]] = None
