@@ -21,4 +21,9 @@ jobs:
           pip install -e .
       - name: Run tests
         run: |
-          pytest -s
+          pytest --junitxml=pytest.xml | tee pytest-coverage.txt
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
