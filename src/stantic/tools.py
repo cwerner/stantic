@@ -1,21 +1,44 @@
+import sys
 from pathlib import Path
-from typing import Any, List, Union
+from typing import Any, List, Optional, TextIO, Union
 
 import pandas as pd
 
 
-def pretty_print(x: Union[List[Any], Any]):
+def pretty_print(
+    x: Union[List[Any], Any],
+    file_object: Optional[TextIO] = None,
+    # clean:bool=False,
+) -> None:
     """do some pretty indentation for data models"""
-    if not isinstance(x, dict):
-        x = {"Content": x}
 
-    for k, v in x.items():
-        print(f"{k}:")
-        if not isinstance(v, list):
-            v = [v]
+    def format_item(e: Any) -> str:
+        return e.json(indent=4, by_alias=True)
 
-        out = ", \n".join([e.json(indent=4, by_alias=True) for e in v if e])
-        print(out)
+    out = ""
+
+    # TODO: refactor. make this recursive?
+    if isinstance(x, list):
+        if file_object:
+            raise NotImplementedError(
+                "Currently containers are not supported for file out"
+            )
+        out += ", \n".join([format_item(e) for e in x if e])
+    elif isinstance(x, dict):
+        if file_object:
+            raise NotImplementedError(
+                "Currently containers are not supported for file out"
+            )
+        for k, v in x.items():
+            if isinstance(x, list):
+                out += ", \n".join([format_item(e) for e in v if e])
+            else:
+                out += format_item(v)
+    else:
+        out += format_item(x)
+
+    file_object = file_object or sys.stdout
+    file_object.write(out + "\n")
 
 
 def load_data(site: str, *, data_src: Path) -> pd.DataFrame:
