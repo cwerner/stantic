@@ -1,9 +1,17 @@
 import time
-from typing import Any
+from typing import Any, Type
 
 import pytest
 
-from stantic.models import Datastream, ObservedProperty, Sensor, Thing
+from stantic.models import (
+    Datastream,
+    Entity,
+    Location,
+    ObservedProperty,
+    Sensor,
+    Thing,
+    Unit,
+)
 from stantic.server import Server
 
 # ============================================================================
@@ -42,6 +50,24 @@ def test_server_get_thing_specific_id(server_with_cleandata: Server):
 
     assert isinstance(thing, Thing)
     assert thing.id == 2
+
+
+@pytest.mark.parametrize(
+    "entity", (Datastream, Location, ObservedProperty, Sensor, Thing)
+)
+def test_server_get_allowed_entities(
+    server_with_cleandata: Server, entity: Type[Entity]
+):
+    results = server_with_cleandata.get(entity)
+    assert bool(results) is True
+
+
+@pytest.mark.parametrize("entity", (Entity, Unit))
+def test_server_get_forbidden_entities(
+    server_with_cleandata: Server, entity: Type[Entity]
+):
+    with pytest.raises(NotImplementedError):
+        server_with_cleandata.get(entity)
 
 
 @pytest.mark.parametrize("searchterm", ("Graswang", "Gras"))

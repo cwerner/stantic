@@ -77,7 +77,6 @@ def test_server_pull_data(
     server_with_cleandata: Server, fendt_temp_datastream: Datastream
 ):
     data = server_with_cleandata.pull_data(fendt_temp_datastream)
-    print(data.head())
     assert len(data) > 0
 
 
@@ -94,7 +93,6 @@ def test_server_pull_data_with_dtmax(
 ):
     max_date = datetime.datetime(2022, 12, 31, tzinfo=datetime.timezone.utc)
     data = server_with_cleandata.pull_data(fendt_temp_datastream, dt_max=max_date)
-    print(data)
     assert data.index.max() <= max_date
 
 

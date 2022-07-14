@@ -172,8 +172,6 @@ class Server:
             cmd = f"pg_restore --verbose --clean --no-acl --no-owner -h localhost -U {POSTGRES_USER} -d {POSTGRES_DB} {source}"
             stdout, stderr, return_code = self._call_container(cmd.split())
 
-            print("RESETTING DATABASE (to defined state)")
-
             if return_code != 0:
                 raise FileNotFoundError(
                     f"DB restore not sucessful. Return code = {return_code}\n{stdout}\n{stderr}"
@@ -196,6 +194,9 @@ class Server:
         Returns:
             Entity or list of requested entities
         """
+
+        if E not in (Datastream, Location, ObservedProperty, Sensor, Thing):
+            raise NotImplementedError(f"Entity {E} not allowed in server.get(E)")
 
         url = self._get_endpoint_url(E, id=id)
 
@@ -587,12 +588,12 @@ class Server:
         """Check if the server can be reached"""
 
         try:
-            r = requests.get(self.url)
-            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+            res = requests.get(self.url)
+            res.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             print("FROST server down?")
         except requests.exceptions.HTTPError:
-            print(f"FROST server repsonds with HTTPError {r.status_code}")
+            print(f"FROST server respsonds with HTTPError {res.status_code}")
         else:
             return True
         return False
