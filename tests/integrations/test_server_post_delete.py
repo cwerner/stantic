@@ -8,6 +8,7 @@ from stantic.models import (
     ObservedProperty,
     Person,
     Sensor,
+    SensorProperty,
     Thing,
     ThingProperty,
 )
@@ -42,10 +43,31 @@ def thing():
     )
 
 
+@pytest.fixture
+def sensor():
+    return Sensor(
+        name="random",
+        description="A new sensor called Random",
+        encodingType="defaultencoding",
+        metadata="some_metadata",
+        properties=SensorProperty(
+            pid="1234",
+            sn="ABC1234",
+            offset=0.0,
+        ),
+    )
+
+
 def test_server_post_thing(server_with_cleandata: Server, thing: Thing):
     server_with_cleandata.post(thing)
     thing = server_with_cleandata.get(Thing, search="random")
     assert thing is not None
+
+
+def test_server_post_sensor(server_with_cleandata: Server, sensor: Sensor):
+    server_with_cleandata.post(sensor)
+    sensor = server_with_cleandata.get(Sensor, search="random")
+    assert sensor is not None
 
 
 def test_server_post_thing_strict_off(server_with_cleandata: Server, thing: Thing):
