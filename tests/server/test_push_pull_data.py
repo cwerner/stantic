@@ -67,6 +67,14 @@ def test_server_push_data_not_batched_overwrite(
     )
 
 
+def test_server_push_data_invalid_dataframe(
+    server_with_cleandata: Server, fendt_temp_datastream: Datastream
+):
+    bad_df = pd.DataFrame(columns={"var": [1, 2]})
+    with pytest.raises(ValueError):
+        server_with_cleandata.push_data(fendt_temp_datastream, bad_df)
+
+
 # def test_server_push_data_batched_overwrite(server_with_cleandata: Server, future_temp_data: pd.DataFrame, fendt_temp_datastream: Datastream):
 #     server_with_cleandata.push_data(fendt_temp_datastream, future_temp_data, batch_mode=True)
 #     with pytest.raises(ValueError):
