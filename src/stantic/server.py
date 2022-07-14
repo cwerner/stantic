@@ -156,7 +156,7 @@ class Server:
             )
             if return_code != 0:
                 raise FileNotFoundError(
-                    f"DB dump not sucessful. Return code = {return_code}\n{stdout}\n{stderr}"
+                    f"DB dump not successful. Return code = {return_code}\n{stdout}\n{stderr}"
                 )
 
     def restore_db(self, source: Path = Path("db.backup")) -> None:

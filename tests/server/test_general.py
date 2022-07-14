@@ -1,6 +1,8 @@
 import datetime
 import json
 import time
+from pathlib import Path
+from typing import List, Union
 
 import pytest
 
@@ -59,44 +61,54 @@ def test_extract_ids_from_navlinks(server_with_data: Server):
     assert json.loads(data_json_with_ids)["Thing"]["id"] == 2
 
 
-# ============================================================================
-# test get functionality
+@pytest.mark.parametrize("command", ("test -f db.backup", ["test", "-f", "db.backup"]))
+def test_call_container(server_with_cleandata: Server, command: Union[str, List[str]]):
 
-# def test_server_get_thing_total_count(server_with_data: Server):
-#     things = server_with_data.get(Thing)
-#     assert len(things) == 2
-#     assert all([isinstance(t, Thing) for t in things])
-
-
-# def test_server_get_thing_specific_id(server_with_data: Server):
-#     thing = server_with_data.get(Thing, id=2)
-
-#     assert type(thing) is not list
-#     assert isinstance(thing, Thing)
+    stdout, stderr, status = server_with_cleandata._call_container(command)
+    assert status == 0
+    assert stderr == ""
+    assert stdout == ""
 
 
-# def test_server_get_thing_search(server_with_data: Server):
-#     thing = server_with_data.get(Thing, search="Graswang")
+@pytest.mark.parametrize("command", ("test -f db.backup", ["test", "-f", "db.backup"]))
+def test_call_container_without_dockercompose_link(
+    server_with_cleandata: Server, command: Union[str, List[str]]
+):
 
-#     assert type(thing) is not list
-#     assert isinstance(thing, Thing)
+    # keep initial status
+    status = server_with_cleandata._docker_compose
 
+    server_with_cleandata._docker_compose = None
+    with pytest.raises(NotImplementedError):
+        server_with_cleandata._call_container(command)
 
-# def test_server_get_thing_partial_search(server_with_data: Server):
-#     thing = server_with_data.get(Thing, search="Gras")
-
-#     assert type(thing) is not list
-#     assert isinstance(thing, Thing)
-
-
-# @pytest.mark.usefixtures("server_with_data")
-# def test_server_add_data(server_with_data: Server):
-#     print("\nWasting time...")
-#     for i in range(4):
-#         print(i)
-#         time.sleep(2)
-
-#     things = server_with_data.get(Thing)
+    # revert to initial status
+    server_with_cleandata._docker_compose = status
 
 
-#     streams = server_with_data.get(Datastream)
+def test_dump_db(server_with_cleandata: Server):
+    server_with_cleandata.dump_db(Path("dummy_db.backup"))
+
+    # test that file exists and is of size > 0
+    _, _, status = server_with_cleandata._call_container("test -s dummy_db.backup")
+    assert status == 0
+
+
+def test_dump_db_invalid_destination(server_with_cleandata: Server):
+    with pytest.raises(FileNotFoundError):
+        server_with_cleandata.dump_db(Path("/invalid/path/dummy_db.backup"))
+
+
+def test_restore_db(server_with_cleandata: Server):
+    server_with_cleandata.restore_db(Path("db.backup"))
+
+
+def test_restore_db_invalid_source(server_with_cleandata: Server):
+    with pytest.raises(FileNotFoundError):
+        server_with_cleandata.restore_db(Path("/invalid/path/db.backup"))
+
+
+def test_restore_db_corrupt_source(server_with_cleandata: Server):
+    server_with_cleandata._call_container("touch corrupt.backup")
+    with pytest.raises(FileNotFoundError):
+        server_with_cleandata.restore_db(Path("corrupt.backup"))
