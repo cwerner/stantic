@@ -28,7 +28,7 @@ from stantic.models import (
 from stantic.server import Server
 from stantic.tools import load_data
 
-COMPOSE_PATH = Path(__file__).parent
+COMPOSE_PATH = Path(__file__).parents[0]
 
 
 POSTGRES_DB = os.getenv("POSTGRES_DB", "sensorthings")
