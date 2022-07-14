@@ -1,4 +1,5 @@
 import importlib.resources
+import os
 import shutil
 import tempfile
 import time
@@ -28,6 +29,11 @@ from stantic.server import Server
 from stantic.tools import load_data
 
 COMPOSE_PATH = Path(__file__).parent
+
+
+POSTGRES_DB = os.getenv("POSTGRES_DB", "sensorthings")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "sensorthings")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "ChangeMe")
 
 
 # TODO : Check where we store our single source of truth for units.
@@ -241,7 +247,7 @@ def server():
         ):
             break
 
-    server = Server(url)
+    server = Server(url, docker_compose=frost)
 
     assert server.is_alive is True
     # store state
@@ -254,11 +260,8 @@ def server():
 
 @pytest.fixture(scope="session")
 def server_with_schema(server: Server):
-
     setup_system(server)
-
     yield server
-    print("\nRemoving schema? Maybe not even desirable...?")
 
 
 @pytest.fixture(scope="session")
@@ -274,8 +277,6 @@ def server_with_data(server_with_schema: Server, sample_data: Path):
     fendt_data = load_data("Fen", data_src=sample_data)
     graswang_data = load_data("Gra", data_src=sample_data)
 
-    # dump = server_with_schema.dump(Datastream)
-    # print(f"DUMP: {dump}")
     fendt_ds = server_with_schema.get(Datastream, search="FEN")
     graswang_ds = server_with_schema.get(Datastream, search="GRA")
 
@@ -298,6 +299,12 @@ def server_with_data(server_with_schema: Server, sample_data: Path):
             batch_mode=True,
         )
 
+    # dump database to speed up cleandata fixture (restire db instead of building it again)
+    server_with_schema.dump_db()
     yield server_with_schema
-    # reset to initial state
-    print("\nRemoving (observation) data again ...?")
+
+
+@pytest.fixture
+def server_with_cleandata(server_with_data: Server):
+    server_with_data.restore_db()
+    return server_with_data

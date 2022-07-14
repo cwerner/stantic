@@ -42,25 +42,32 @@ def thing():
     )
 
 
-def test_server_post_thing(server_with_data: Server, thing: Thing):
-    thing = server_with_data.post(thing)
-    server_with_data.get(Thing, search="random")
+def test_server_post_thing(server_with_cleandata: Server, thing: Thing):
+    server_with_cleandata.post(thing)
+    thing = server_with_cleandata.get(Thing, search="random")
+    assert thing is not None
 
 
-def test_server_post_thing_strict_off(server_with_data: Server, thing: Thing):
-    thing = server_with_data.post(thing, strict=False)
-    thing_from_server = server_with_data.get(Thing, search="random")
-    assert thing_from_server[0].id != thing.id
+def test_server_post_thing_strict_off(server_with_cleandata: Server, thing: Thing):
+    server_with_cleandata.post(thing, strict=False)
+    thing.id = None
+    server_with_cleandata.post(thing, strict=False)
+    things = server_with_cleandata.get(Thing, search="random")
+    assert len(set([thing.id for thing in things])) > 1
 
 
-def test_server_post_thing_strict_on(server_with_data: Server, thing: Thing):
+def test_server_post_thing_strict_on(server_with_cleandata: Server, thing: Thing):
+    server_with_cleandata.post(thing, strict=True)
     with pytest.raises(ValueError):
-        thing = server_with_data.post(thing, strict=True)
+        server_with_cleandata.post(thing, strict=True)
 
 
-def test_server_delete_thing(server_with_data: Server):
-    thing = server_with_data.get(Thing, search="random")
-    server_with_data.delete(Thing, id=thing[0].id)
+def test_server_delete_thing(server_with_cleandata: Server):
+    things = server_with_cleandata.get(Thing)
+    server_with_cleandata.delete(Thing, id=things[0].id)
+    things_after_delete = server_with_cleandata.get(Thing)
+    assert len(things) - 1 == len(things_after_delete)
+    assert things[0].id not in set([thing.id for thing in things_after_delete])
 
 
 @pytest.mark.skip("This fails with a 'POST only allowed for Collections' 400 error?")
