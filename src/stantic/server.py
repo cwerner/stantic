@@ -250,9 +250,6 @@ class Server:
                 if search and len(objs) == 1:
                     return objs[0]
 
-                if len(objs) == 0:
-                    print("No entries found.")
-
                 return objs
 
         elif res.status_code == 404:
