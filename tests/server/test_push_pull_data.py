@@ -104,6 +104,27 @@ def test_server_pull_data_with_dtmax(
     assert data.index.max() <= max_date
 
 
+def test_server_pull_data_trigger_data_truncate(
+    server_with_cleandata: Server, fendt_temp_datastream: Datastream
+):
+    data_complete = server_with_cleandata.pull_data(fendt_temp_datastream)
+    data_truncated = server_with_cleandata.pull_data(
+        fendt_temp_datastream, max_requests=2
+    )
+    assert len(data_complete) > len(data_truncated)
+
+
+def test_server_pull_data_with_dtmin_and_dtmax(
+    server_with_cleandata: Server, fendt_temp_datastream: Datastream
+):
+    min_date = datetime.datetime(2022, 1, 1, tzinfo=datetime.timezone.utc)
+    max_date = datetime.datetime(2022, 12, 31, tzinfo=datetime.timezone.utc)
+    data = server_with_cleandata.pull_data(
+        fendt_temp_datastream, dt_min=min_date, dt_max=max_date
+    )
+    assert data.index.max() <= max_date and data.index.min() >= min_date
+
+
 def test_server_pull_data_with_invalid_dtmin_dtmax(
     server_with_cleandata: Server, fendt_temp_datastream: Datastream
 ):

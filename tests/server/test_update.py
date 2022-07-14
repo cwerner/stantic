@@ -10,31 +10,33 @@ from stantic.server import Server
 # test update functionality
 
 
-def test_server_update_thing(server_with_data: Server):
-    thing = server_with_data.get(Thing, id=2)
+def test_server_update_thing(server_with_cleandata: Server):
+    thing = server_with_cleandata.get(Thing, id=2)
     thing.description = thing.description + " (updated)"
-    server_with_data.update(thing)
-    thing_updated = server_with_data.get(Thing, id=2)
+    server_with_cleandata.update(thing)
+    thing_updated = server_with_cleandata.get(Thing, id=2)
     assert "(updated)" in thing_updated.description
 
 
-def test_server_update_thing_without_id(server_with_data: Server):
-    thing = server_with_data.get(Thing, id=2)
+def test_server_update_thing_without_id(server_with_cleandata: Server):
+    thing = server_with_cleandata.get(Thing, id=2)
     thing.id = None
     thing.description = thing.description + " (updated)"
     with pytest.raises(ValueError):
-        server_with_data.update(thing)
+        server_with_cleandata.update(thing)
 
 
-def test_server_update_thing_with_field(server_with_data: Server):
-    thing = server_with_data.get(Thing, id=2)
-    server_with_data.update_field(
+def test_server_update_thing_with_field(server_with_cleandata: Server):
+    thing = server_with_cleandata.get(Thing, id=2)
+    server_with_cleandata.update_field(
         Thing, id=2, payload={"description": thing.description + " (updated again)"}
     )
-    thing_updated = server_with_data.get(Thing, id=2)
+    thing_updated = server_with_cleandata.get(Thing, id=2)
     assert "(updated again)" in thing_updated.description
 
 
-def test_server_update_thing_with_invalid_field(server_with_data: Server):
+def test_server_update_thing_with_invalid_field(server_with_cleandata: Server):
     with pytest.raises(ValueError):
-        server_with_data.update_field(Thing, id=2, payload={"invalid_field": "invalid"})
+        server_with_cleandata.update_field(
+            Thing, id=2, payload={"invalid_field": "invalid"}
+        )
