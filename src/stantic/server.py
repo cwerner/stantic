@@ -1,7 +1,9 @@
 import datetime
 import json
 import math
+import os
 import re
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import pandas as pd
@@ -16,6 +18,10 @@ Url = str
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 MAX_REQUESTS = 1000  # maximum data requests in pull_data (of 100 values each)
+
+POSTGRES_DB = os.getenv("POSTGRES_DB", "sensorthings")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "sensorthings")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "ChangeMe")
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
@@ -76,12 +82,25 @@ class Server:
 
     # _tag = "cw_"  # filter all server entities by this name tag for now
 
-    def __init__(self, url: Url):
+    def __init__(self, url: Url, docker_compose: Optional[Any] = None):
         self._url = url
+        self._docker_compose = (
+            docker_compose  # optional link to testcontainers docker-compose instance
+        )
 
     @property
     def url(self) -> Url:
         return self._url
+
+    def _call_container(
+        self, command: Union[str, List[str]], container: str = "database"
+    ) -> Tuple[str, str, int]:
+        if self._docker_compose:
+            if isinstance(command, str):
+                command = command.split()
+            return self._docker_compose.exec_in_container(container, command)
+        else:
+            raise NotImplementedError
 
     def _get_endpoint_url(
         self, entity: Union[Entity, Type[Entity]], id: Optional[int] = None
@@ -128,6 +147,37 @@ class Server:
         )
 
         return data
+
+    def dump_db(self, dest: Path = Path("db.backup")) -> None:
+        if self._docker_compose:
+            cmd = f"pg_dump -Fc -U {POSTGRES_USER} -h localhost {POSTGRES_DB} --no-owner --no-acl --verbose -f {dest}"
+            stdout, stderr, return_code = self._docker_compose.exec_in_container(
+                "database", cmd.split()
+            )
+            if return_code != 0:
+                raise FileNotFoundError(
+                    f"DB dump not sucessful. Return code = {return_code}\n{stdout}\n{stderr}"
+                )
+
+    def restore_db(self, source: Path = Path("db.backup")) -> None:
+        if self._docker_compose:
+
+            # check if database dump file exists in container volume
+            _, _, status = self._call_container(f"test -f {source}".split())
+            if status != 0:
+                raise FileNotFoundError(
+                    f"DB restore file not found in container at path {source}"
+                )
+
+            cmd = f"pg_restore --verbose --clean --no-acl --no-owner -h localhost -U {POSTGRES_USER} -d {POSTGRES_DB} {source}"
+            stdout, stderr, return_code = self._call_container(cmd.split())
+
+            print("RESETTING DATABASE (to defined state)")
+
+            if return_code != 0:
+                raise FileNotFoundError(
+                    f"DB restore not sucessful. Return code = {return_code}\n{stdout}\n{stderr}"
+                )
 
     # TODO: make 'id' and 'search' mutually exclusive !!!
     def get(
@@ -290,7 +340,7 @@ class Server:
 
         if res.status_code != 201:  # pragma: no cover
             raise ValueError(
-                f"Something went wrong in POST: {res.status_code}: {res.text}"
+                f"Something went wrong in POST: {res.status_code}: {res.text}\n{url}"
             )
         else:
             # retrieve id from frost server and update entity
