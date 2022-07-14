@@ -256,7 +256,6 @@ class Server:
                 return objs
 
         elif res.status_code == 404:
-            print(f"Requested id not found. <{res.status_code}>")
             return []
         else:  # pragma: no cover
             raise NotImplementedError(f"Raised status code {res.status_code}")
@@ -349,40 +348,37 @@ class Server:
 
         return entity
 
-    def delete(
-        self, E: Type[Entity], id: Optional[int] = None, search: Optional[str] = None
-    ) -> None:
+    def delete(self, E: Type[Entity], id: Optional[int] = None) -> None:
         """Delete all or specified entity from server
 
         Args:
             E: entity type to delete
             id: entity id
-            search: filter entitites by this search string
 
         Returns:
             Nothing
         """
 
-        url = self._get_endpoint_url(E, id=id)
-
-        # filter response for "cw_" entities, turn-off tag limit with tag_off=True
-        # if hasattr(Server, "_tag") and not tag_off:
-        #    url += f"?$filter=startswith(name, '{self._tag}')"
-
-        if search:
-            url += f"$filter=substringof('{search}', name)"
-
-        res = requests.delete(url)
-
-        if res.status_code != 200:
-            print(f"Delete not successful. Return status {res.status_code}")
+        if id:
+            all_ids = [id]
         else:
-            # check that all entities are gone
-            result = self.get(E, id=id)
-            if len(result) != 0:
-                raise ValueError(
-                    f"Something went wrong. There are still {E} left after delete!"
+            all_ids = [e.id for e in self.get(E)]
+
+        for id in all_ids:
+            url = self._get_endpoint_url(E, id=id)
+            res = requests.delete(url)
+
+            if res.status_code != 200:
+                print(
+                    f"Delete not successful for entity {E}, id={id}. Return status {res.status_code}"
                 )
+            else:
+                # check that all entities are gone
+                result = self.get(E, id=id)
+                if len(result) != 0:
+                    raise ValueError(
+                        f"Something went wrong. There are still {E} left after delete!"
+                    )
 
     def push_data(
         self,
