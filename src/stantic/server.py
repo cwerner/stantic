@@ -1,7 +1,9 @@
 import datetime
 import json
 import math
+import os
 import re
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Type, Union
 
 import pandas as pd
@@ -16,6 +18,10 @@ Url = str
 
 DT_FORMAT = "%Y-%m-%dT%H:%M:%S.000Z"
 MAX_REQUESTS = 1000  # maximum data requests in pull_data (of 100 values each)
+
+POSTGRES_DB = os.getenv("POSTGRES_DB", "sensorthings")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "sensorthings")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "ChangeMe")
 
 
 def expected_cols_and_dtypes(df: pd.DataFrame) -> bool:
@@ -76,12 +82,25 @@ class Server:
 
     # _tag = "cw_"  # filter all server entities by this name tag for now
 
-    def __init__(self, url: Url):
+    def __init__(self, url: Url, docker_compose: Optional[Any] = None):
         self._url = url
+        self._docker_compose = (
+            docker_compose  # optional link to testcontainers docker-compose instance
+        )
 
     @property
     def url(self) -> Url:
         return self._url
+
+    def _call_container(
+        self, command: Union[str, List[str]], container: str = "database"
+    ) -> Tuple[str, str, int]:
+        if self._docker_compose:
+            if isinstance(command, str):
+                command = command.split()
+            return self._docker_compose.exec_in_container(container, command)
+        else:
+            raise NotImplementedError
 
     def _get_endpoint_url(
         self, entity: Union[Entity, Type[Entity]], id: Optional[int] = None
@@ -129,6 +148,35 @@ class Server:
 
         return data
 
+    def dump_db(self, dest: Path = Path("db.backup")) -> None:
+        if self._docker_compose:
+            cmd = f"pg_dump -Fc -U {POSTGRES_USER} -h localhost {POSTGRES_DB} --no-owner --no-acl --verbose -f {dest}"
+            stdout, stderr, return_code = self._docker_compose.exec_in_container(
+                "database", cmd.split()
+            )
+            if return_code != 0:
+                raise FileNotFoundError(
+                    f"DB dump not successful. Return code = {return_code}\n{stdout}\n{stderr}"
+                )
+
+    def restore_db(self, source: Path = Path("db.backup")) -> None:
+        if self._docker_compose:
+
+            # check if database dump file exists in container volume
+            _, _, status = self._call_container(f"test -f {source}".split())
+            if status != 0:
+                raise FileNotFoundError(
+                    f"DB restore file not found in container at path {source}"
+                )
+
+            cmd = f"pg_restore --verbose --clean --no-acl --no-owner -h localhost -U {POSTGRES_USER} -d {POSTGRES_DB} {source}"
+            stdout, stderr, return_code = self._call_container(cmd.split())
+
+            if return_code != 0:
+                raise FileNotFoundError(
+                    f"DB restore not sucessful. Return code = {return_code}\n{stdout}\n{stderr}"
+                )
+
     # TODO: make 'id' and 'search' mutually exclusive !!!
     def get(
         self,
@@ -146,6 +194,9 @@ class Server:
         Returns:
             Entity or list of requested entities
         """
+
+        if E not in (Datastream, Location, ObservedProperty, Sensor, Thing):
+            raise NotImplementedError(f"Entity {E} not allowed in server.get(E)")
 
         url = self._get_endpoint_url(E, id=id)
 
@@ -199,13 +250,9 @@ class Server:
                 if search and len(objs) == 1:
                     return objs[0]
 
-                if len(objs) == 0:
-                    print("No entries found.")
-
                 return objs
 
         elif res.status_code == 404:
-            print(f"Requested id not found. <{res.status_code}>")
             return []
         else:  # pragma: no cover
             raise NotImplementedError(f"Raised status code {res.status_code}")
@@ -290,7 +337,7 @@ class Server:
 
         if res.status_code != 201:  # pragma: no cover
             raise ValueError(
-                f"Something went wrong in POST: {res.status_code}: {res.text}"
+                f"Something went wrong in POST: {res.status_code}: {res.text}\n{url}"
             )
         else:
             # retrieve id from frost server and update entity
@@ -298,40 +345,37 @@ class Server:
 
         return entity
 
-    def delete(
-        self, E: Type[Entity], id: Optional[int] = None, search: Optional[str] = None
-    ) -> None:
+    def delete(self, E: Type[Entity], id: Optional[int] = None) -> None:
         """Delete all or specified entity from server
 
         Args:
             E: entity type to delete
             id: entity id
-            search: filter entitites by this search string
 
         Returns:
             Nothing
         """
 
-        url = self._get_endpoint_url(E, id=id)
-
-        # filter response for "cw_" entities, turn-off tag limit with tag_off=True
-        # if hasattr(Server, "_tag") and not tag_off:
-        #    url += f"?$filter=startswith(name, '{self._tag}')"
-
-        if search:
-            url += f"$filter=substringof('{search}', name)"
-
-        res = requests.delete(url)
-
-        if res.status_code != 200:
-            print(f"Delete not successful. Return status {res.status_code}")
+        if id:
+            all_ids = [id]
         else:
-            # check that all entities are gone
-            result = self.get(E, id=id)
-            if len(result) != 0:
-                raise ValueError(
-                    f"Something went wrong. There are still {E} left after delete!"
+            all_ids = [e.id for e in self.get(E)]
+
+        for id in all_ids:
+            url = self._get_endpoint_url(E, id=id)
+            res = requests.delete(url)
+
+            if res.status_code != 200:
+                print(
+                    f"Delete not successful for entity {E}, id={id}. Return status {res.status_code}"
                 )
+            else:
+                # check that all entities are gone
+                result = self.get(E, id=id)
+                if len(result) != 0:
+                    raise ValueError(
+                        f"Something went wrong. There are still {E} left after delete!"
+                    )
 
     def push_data(
         self,
@@ -537,12 +581,12 @@ class Server:
         """Check if the server can be reached"""
 
         try:
-            r = requests.get(self.url)
-            r.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
+            res = requests.get(self.url)
+            res.raise_for_status()  # Raises a HTTPError if the status is 4xx, 5xxx
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             print("FROST server down?")
         except requests.exceptions.HTTPError:
-            print(f"FROST server repsonds with HTTPError {r.status_code}")
+            print(f"FROST server respsonds with HTTPError {res.status_code}")
         else:
             return True
         return False
